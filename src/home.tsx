@@ -71,9 +71,9 @@ function Home() {
             <div className='main-footer'>
                 <Footer />
             </div>
-            <Divider/>
+            <Divider />
             <p>&copy; Tyvirakpoung Piseth 2026</p>
-            
+
         </div>
     )
 }
@@ -166,6 +166,7 @@ function Footer() {
     const [isSending, setIsSending] = useState(false);
     const [sendError, setSendError] = useState<string | null>(null);
     const [sendSuccess, setSendSuccess] = useState(false);
+    const [honeypot, setHoneypot] = useState(''); // Only bots will fill this!
 
     useEffect(() => {
         if (!isFormVisible) return;
@@ -197,7 +198,7 @@ function Footer() {
             const res = await fetch('/api/contact', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ message }),
+                body: JSON.stringify({ message, website_confirm: honeypot }), // Include honeymoon field (named 'website_confirm' to fool bots)
             });
 
             const data = await res.json().catch(() => null);
@@ -208,7 +209,12 @@ function Footer() {
 
             setSendSuccess(true);
             setMessage('');
-            setIsFormVisible(false);
+
+            // Keep the modal open for 2 seconds to show 'Sent!'
+            setTimeout(() => {
+                setIsFormVisible(false);
+                setSendSuccess(false);
+            }, 2000);
         } catch (err) {
             setSendError(String(err));
         } finally {
@@ -216,7 +222,7 @@ function Footer() {
         }
     };
 
-    function viewCV(){
+    function viewCV() {
         window.open(CV)
     }
 
@@ -227,7 +233,7 @@ function Footer() {
 
 
             <div className='button-container'>
-                 <button
+                <button
                     className='contact-toggle'
                     onClick={() => setIsFormVisible(!isFormVisible)}
                 >
@@ -251,17 +257,18 @@ function Footer() {
                         aria-label='Contact form'
                         onClick={(e) => e.stopPropagation()}
                     >
-                        <div className='contact-modal-header'>
-                            <h3>Send me a message</h3>
-                            <button
-                                type='button'
-                                className='contact-modal-close'
-                                onClick={() => setIsFormVisible(false)}
-                                aria-label='Close'
-                            >
-                                ✕
-                            </button>
-                        </div>
+                        <span
+                            className='contact-modal-close'
+                            onClick={() => setIsFormVisible(false)}
+                            role='button'
+                            tabIndex={0}
+                            aria-label='Close'
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter' || e.key === ' ') setIsFormVisible(false);
+                            }}
+                        >
+                            ✕
+                        </span>
 
                         <form className='contact-form' onSubmit={handleSubmit}>
                             <textarea
@@ -269,6 +276,16 @@ function Footer() {
                                 onChange={(e) => setMessage(e.target.value)}
                                 placeholder="Write something..."
                                 required
+                            />
+                            {/* Stealthy Honeypot field: invisible to humans, fills by bots */}
+                            <input
+                                type="text"
+                                name="website_confirm"
+                                value={honeypot}
+                                onChange={(e) => setHoneypot(e.target.value)}
+                                style={{ display: 'none' }}
+                                tabIndex={-1}
+                                autoComplete="off"
                             />
                             <button type="submit" disabled={isSending}>
                                 {isSending ? 'Sending...' : 'Send'}
