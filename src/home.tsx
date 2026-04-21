@@ -10,7 +10,6 @@ import {
     SiDart, SiFlutter, SiSvelte
 } from 'react-icons/si'
 import { FaJava } from 'react-icons/fa6'
-import Divider from './components/divider'
 import CV from './assets/CV 2026.pdf'
 
 const toolkit = [
@@ -35,7 +34,6 @@ const toolkit = [
 ];
 
 function Home() {
-
     return (
         <div className='home-container'>
             <div className='main-header'>
@@ -43,37 +41,24 @@ function Home() {
                 <NavigationBar />
             </div>
             <div className='main-body'>
-                <div className='introduction'>
+                <section className='introduction' id="home">
                     <div className='introduction-left'>
-                        <h2>Hi, I'm Piseth Tyvirakpoung</h2>
+                        <h1>Hi, I'm Piseth Tyvirakpoung</h1>
                         <p>I'm a software developer and a Junior at the American University of Phnom Penh.</p>
                         <p>I love building web applications, small web-based games, and other software programs.</p>
-
-                        {/* <div className='skills-section'>
-                            <h2>What I Use:</h2>
-                            <div className='skills-grid'>
-                                {skills.map((skill, index) => (
-                                    <span key={index} className='skill-tag'>
-                                        {skill.icon} {skill.name}
-                                    </span>
-                                ))}
-                            </div>
-                        </div> */}
-                        <Experience></Experience>
                     </div>
                     <div className='introduction-right'>
-                        <img src={selfPortrait} alt="Self Portrait" width={450} height={650} />
+                        <img src={selfPortrait} alt="Piseth Tyvirakpoung" width={320} height={460} />
                     </div>
-                </div>
+                </section>
             </div>
-            <ToolKit></ToolKit>
-            <Projects></Projects>
+            <Experience />
+            <ToolKit />
+            <Projects />
             <div className='main-footer'>
                 <Footer />
             </div>
-            <Divider />
-            <p>&copy; Tyvirakpoung Piseth 2026</p>
-
+            <p className='copyright-text'>&copy; Tyvirakpoung Piseth 2026</p>
         </div>
     )
 }
@@ -82,19 +67,26 @@ function HomeHeader() {
     return (
         <div className='header-titles'>
             <h3>Piseth Tyvirakpoung</h3>
-            <span className='subtitle'>Software Developer</span>
         </div>
     )
 }
 
 function NavigationBar() {
-    const navItems = ["Home", "Skills", "Skills", "Resume", "Contact"];
+    const navItems = [
+        { label: "Home", href: "#home" },
+        { label: "Experience", href: "#experience" },
+        { label: "Skills", href: "#toolkit" },
+        { label: "Projects", href: "#projects" },
+        { label: "Contact", href: "#contact" },
+    ];
 
     return (
         <nav className='nav-bar'>
             <ul className='nav-list'>
                 {navItems.map((item) => (
-                    <li key={item} className='nav-item'>{item}</li>
+                    <li key={item.label} className='nav-item'>
+                        <a href={item.href}>{item.label}</a>
+                    </li>
                 ))}
             </ul>
         </nav>
@@ -103,13 +95,13 @@ function NavigationBar() {
 
 function ToolKit() {
     return (
-        <div className='toolkit-container'>
+        <div className='toolkit-container' id="toolkit">
             <h3>Tool Kit:</h3>
-            <Divider />
+            <hr className='divider-line' />
             <div className='toolkit-cards-container'>
                 {toolkit.map((skill, index) => (
-                    <span key={index} className='skill-tag'>
-                        {skill.icon} {skill.name}
+                    <span key={index} className='skill-tag' title={skill.name}>
+                        {skill.icon}
                     </span>
                 ))}
             </div>
@@ -118,38 +110,38 @@ function ToolKit() {
 }
 
 function Projects() {
-    const Projects = [
+    const projects = [
         {
             title: "Property Listing Website (Node.js)",
-            description: "A internal web-based application for listing and searching properties.",
+            description: "Property listing website (on Node.js) is a containerized resource for your favorites, allowing you to browse and detail your home website.",
         },
         {
             title: "Service Management System (Laravel)",
-            description: "A internal web-based application for managing funeral services.",
+            description: "Service management system (Laravel) provides service management system, and services and rating automotive customer.",
         },
         {
             title: "E-Commerce Website (HTML5 + Tailwind)",
-            description: "An e-commerce website for selling jewelry and accessories.",
+            description: "E-Commerce website (HTML5 + Tailwind) to bolster your customers on in-store, site website and commerce.",
         },
         {
             title: "Game Portfolio (Three.js)",
-            description: "My personal portfolio made into an RPG game with a storyline.",
+            description: "Game Portfolio (Three.js) is convert building, drawn pines or creation/code development, immersive, with bridges.",
         },
         {
             title: "Terminal Chat Application (Java)",
-            description: "A chatting application used in terminal.",
+            description: "Terminal chat application (Java) is also gamist sow previous terminal management tool and chat application.",
         },
         {
             title: "Sudoku Solver Application (Java)",
-            description: "A software that solves sudoku up to 25x25 grids in seconds.",
+            description: "Sudoku solver application (Java) is a real format and sudoku game integration in with your networks.",
         }
     ]
     return (
-        <div className='projects-container'>
+        <div className='projects-container' id="projects">
             <h2>Featured Projects:</h2>
-            <Divider />
+            <hr className='divider-line' />
             <div className='projects-cards-grid'>
-                {Projects.map((project, index) => (
+                {projects.map((project, index) => (
                     <div key={index} className='project-card'>
                         <h3>{project.title}</h3>
                         <p>{project.description}</p>
@@ -166,7 +158,7 @@ function Footer() {
     const [isSending, setIsSending] = useState(false);
     const [sendError, setSendError] = useState<string | null>(null);
     const [sendSuccess, setSendSuccess] = useState(false);
-    const [honeypot, setHoneypot] = useState(''); // Only bots will fill this!
+    const [honeypot, setHoneypot] = useState('');
 
     useEffect(() => {
         if (!isFormVisible) return;
@@ -198,7 +190,7 @@ function Footer() {
             const res = await fetch('/api/contact', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ message, website_confirm: honeypot }), // Include honeymoon field (named 'website_confirm' to fool bots)
+                body: JSON.stringify({ message, website_confirm: honeypot }),
             });
 
             const data = await res.json().catch(() => null);
@@ -210,7 +202,6 @@ function Footer() {
             setSendSuccess(true);
             setMessage('');
 
-            // Keep the modal open for 2 seconds to show 'Sent!'
             setTimeout(() => {
                 setIsFormVisible(false);
                 setSendSuccess(false);
@@ -227,10 +218,9 @@ function Footer() {
     }
 
     return (
-        <div className='footer-content'>
+        <div className='footer-content' id="contact">
             <h2>Connect with me</h2>
-            <p>Email: pang.jpsoen@gmail.com | Phone: +855-78-685-747</p>
-
+            <p>Email: pang.jpsoen@gmail.com | Phone: +855 78 685 747</p>
 
             <div className='button-container'>
                 <button
@@ -242,7 +232,6 @@ function Footer() {
 
                 <button onClick={() => viewCV()} className='contact-toggle'>View my Curriculum Vitae</button>
             </div>
-
 
             {isFormVisible && (
                 <div
@@ -277,7 +266,7 @@ function Footer() {
                                 placeholder="Write something..."
                                 required
                             />
-                            {/* Stealthy Honeypot field: invisible to humans, fills by bots */}
+                            {/* Honeypot field */}
                             <input
                                 type="text"
                                 name="website_confirm"
@@ -302,4 +291,3 @@ function Footer() {
 
 
 export default Home
-

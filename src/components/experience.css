@@ -1,73 +1,102 @@
 .experience-container {
-    color: white;
+  padding: 20px 0 40px;
+}
+
+.experience-container h3 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 24px;
+}
+
+.experience-cards-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
 }
 
 .experience-card {
-    color: white;
-    width: 100%;
-    height: max-content;
-    border: 1px solid white;
-    border-radius: 10px;
-    margin: 1.5rem 0 2rem 0;
-    padding: 1vh 2vh;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: 28px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.experience-card:hover {
+  border-color: var(--border-glow);
+  box-shadow: 0 8px 24px rgba(56, 119, 235, 0.1);
 }
 
 .experience-title {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 8px;
 }
 
 .experience-card h3 {
-    margin-bottom: 0;
-    font-size: 22px;
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text-primary);
 }
 
 .experience-card small {
-    font-size: 12px;
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  font-weight: 400;
 }
 
 .experience-desc {
-    margin-top: 1rem;
-    font-size: 14px;
-    line-height: 1.6;
-    color: #e0e0e0;
-    animation: fadeIn 0.3s ease-in-out;
+  font-size: 0.85rem;
+  line-height: 1.65;
+  color: var(--text-secondary);
+  animation: fadeIn 0.3s ease-in-out;
 }
 
-
 .show-description-btn {
-    background: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    color: white;
-    padding: 8px 16px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 13px;
-    transition: all 0.2s ease;
-    font-weight: 500;
-    margin-bottom: 0.5rem;
+  align-self: flex-start;
+  background: transparent;
+  border: 1px solid rgba(56, 119, 235, 0.2);
+  color: var(--text-secondary);
+  padding: 8px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 500;
+  font-family: inherit;
+  transition: all 0.25s ease;
+  margin-top: 4px;
 }
 
 .show-description-btn:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: white;
-    transform: translateY(-1px);
-    
+  background: rgba(56, 119, 235, 0.08);
+  border-color: var(--accent-blue);
+  color: var(--text-primary);
 }
 
 .show-description-btn:active {
-    transform: translateY(0);
+  transform: scale(0.98);
 }
 
 @keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(-5px);
-    }
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+/* Responsive */
+@media (max-width: 640px) {
+  .experience-cards-container {
+    grid-template-columns: 1fr;
+  }
 }
