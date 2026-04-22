@@ -7,31 +7,34 @@ interface ExperienceCardProps {
     description: string;
 }
 
-const ExperienceCard = ({ company, title, description }: ExperienceCardProps) => {
-    const [showDescription, setShowDescription] = useState(false);
-
+const ExperienceCard = ({ company, title, description, isExpanded, onToggle, cardIndex }: ExperienceCardProps & { isExpanded: boolean; onToggle: () => void; cardIndex: number }) => {
     return (
-        <div className='experience-card'>
+        <div className={`experience-card experience-card-${cardIndex}`}>
             <div className='experience-title'>
                 <h3>{company}</h3>
                 <small>{title}</small>
             </div>
 
-            {showDescription && (
+            {isExpanded && (
                 <p className="experience-desc">{description}</p>
             )}
 
             <button
                 className="show-description-btn"
-                onClick={() => setShowDescription(!showDescription)}
+                onClick={(e) => {
+                    e.stopPropagation();
+                    onToggle();
+                }}
             >
-                {showDescription ? "Hide Job Description ▲" : "Show Job Description ▼"}
+                {isExpanded ? "Hide Job Description ▲" : "Show Job Description ▼"}
             </button>
         </div>
     );
 };
 
 function Experience() {
+    const [expandedCard, setExpandedCard] = useState<string | null>(null);
+
     const experiences = [
         {
             company: "SBI Ly Hour Bank Plc.",
@@ -45,12 +48,23 @@ function Experience() {
         }
     ];
 
+    const handleToggle = (company: string) => {
+        console.log('Toggling:', company, 'Current expanded:', expandedCard);
+        setExpandedCard(expandedCard === company ? null : company);
+    };
+
     return (
         <div className='experience-container'>
             <h3>Work Experience:</h3>
             <div className='experience-cards-container'>
                 {experiences.map((exp, index) => (
-                    <ExperienceCard key={index} {...exp} />
+                    <ExperienceCard
+                        key={exp.company}
+                        {...exp}
+                        isExpanded={expandedCard === exp.company}
+                        onToggle={() => handleToggle(exp.company)}
+                        cardIndex={index}
+                    />
                 ))}
             </div>
         </div>
