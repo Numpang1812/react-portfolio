@@ -85,7 +85,7 @@
 }
 
 .introduction-left {
-  margin-bottom: ;
+  margin-bottom: 0;
 }
 
 .introduction-left h2 {
@@ -140,32 +140,42 @@
 /* ── Tool Kit Section ── */
 .toolkit-container {
   margin: 20px 0 60px;
-  padding: 50px 40px;
+  padding: 20px 0 40px;
   text-align: left;
-  border: 1px solid var(--border-color);
-  border-radius: 20px;
-  background: var(--bg-card);
-  backdrop-filter: blur(10px);
-  transition: border-color 0.4s ease;
-}
-
-.toolkit-container:hover {
-  border-color: var(--border-glow);
 }
 
 .toolkit-container h3 {
   font-size: 1.6rem;
-  margin-bottom: 12px;
+  margin-bottom: 24px;
   color: var(--text-primary);
   font-weight: 700;
 }
 
 .toolkit-cards-container {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 18px;
+  flex-direction: column;
+  gap: 32px;
   margin-top: 24px;
+}
+
+.toolkit-category {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.toolkit-category-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+  letter-spacing: 0.02em;
+}
+
+.toolkit-skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
 }
 
 .skill-tag {
@@ -204,22 +214,13 @@
 /* ── Featured Projects Section ── */
 .projects-container {
   margin: 20px 0 60px;
-  padding: 50px 40px;
+  padding: 20px 0 40px;
   text-align: left;
-  border: 1px solid var(--border-color);
-  border-radius: 20px;
-  background: var(--bg-card);
-  backdrop-filter: blur(10px);
-  transition: border-color 0.4s ease;
-}
-
-.projects-container:hover {
-  border-color: var(--border-glow);
 }
 
 .projects-container h2 {
   font-size: 1.6rem;
-  margin-bottom: 12px;
+  margin-bottom: 24px;
   color: var(--text-primary);
   font-weight: 700;
   background: none;
@@ -530,8 +531,6 @@
     grid-template-columns: 1fr;
   }
 
-  .toolkit-container,
-  .projects-container,
   .main-footer {
     padding: 30px 20px;
   }

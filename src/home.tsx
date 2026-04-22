@@ -3,35 +3,55 @@ import { useEffect, useState } from 'react'
 import './home.css'
 import selfPortrait from './assets/self-portrait-Photoroom.png'
 import Experience from './components/experience'
+import Education from './components/education'
 import {
     SiHtml5, SiCss3, SiJavascript, SiTypescript, SiReact,
     SiLaravel, SiPython, SiCplusplus, SiNodedotjs,
     SiGithub, SiAmazonwebservices, SiMysql, SiMongodb, SiPhp,
-    SiDart, SiFlutter, SiSvelte
+    SiDart, SiFlutter, SiSvelte, SiSqlite, SiTurso,
+    SiGooglecloud, SiSupabase, SiVercel, SiC, SiCloudinary, SiGit
 } from 'react-icons/si'
 import { FaJava } from 'react-icons/fa6'
 import CV from './assets/CV 2026.pdf'
 
-const toolkit = [
-    { name: "HTML5", icon: <SiHtml5 /> },
-    { name: "CSS", icon: <SiCss3 /> },
-    { name: "JavaScript", icon: <SiJavascript /> },
-    { name: "TypeScript", icon: <SiTypescript /> },
-    { name: "React", icon: <SiReact /> },
-    { name: "Laravel", icon: <SiLaravel /> },
-    { name: "Python", icon: <SiPython /> },
-    { name: "Java", icon: <FaJava /> },
-    { name: "C/C++", icon: <SiCplusplus /> },
-    { name: "Node.js", icon: <SiNodedotjs /> },
-    { name: "Git/GitHub", icon: <SiGithub /> },
-    { name: "AWS", icon: <SiAmazonwebservices /> },
-    { name: "MySQL", icon: <SiMysql /> },
-    { name: "MongoDB", icon: <SiMongodb /> },
-    { name: "PHP", icon: <SiPhp /> },
-    { name: "Dart", icon: <SiDart /> },
-    { name: "Flutter", icon: <SiFlutter /> },
-    { name: "Svelte", icon: <SiSvelte /> },
-];
+const toolkit = {
+    languages: [
+        { name: "HTML5", icon: <SiHtml5 /> },
+        { name: "CSS", icon: <SiCss3 /> },
+        { name: "JavaScript", icon: <SiJavascript /> },
+        { name: "TypeScript", icon: <SiTypescript /> },
+        { name: "Python", icon: <SiPython /> },
+        { name: "Java", icon: <FaJava /> },
+        { name: "C", icon: <SiC /> },
+        { name: "C++", icon: <SiCplusplus /> },
+        { name: "PHP", icon: <SiPhp /> },
+        { name: "Dart", icon: <SiDart /> },
+    ],
+    frameworks: [
+        { name: "React", icon: <SiReact /> },
+        { name: "Laravel", icon: <SiLaravel /> },
+        { name: "Flutter", icon: <SiFlutter /> },
+        { name: "Svelte", icon: <SiSvelte /> },
+        { name: "Node.js", icon: <SiNodedotjs /> },
+    ],
+    databases: [
+        { name: "MySQL", icon: <SiMysql /> },
+        { name: "MongoDB", icon: <SiMongodb /> },
+        { name: "SQLite", icon: <SiSqlite /> },
+        { name: "Turso", icon: <SiTurso /> },
+    ],
+    devOps: [
+        { name: "GitHub", icon: <SiGithub /> },
+        { name: "Git", icon: <SiGit/> },
+        { name: "Vercel", icon: <SiVercel /> },
+    ],
+    cloudServices: [
+        { name: "Google Cloud", icon: <SiGooglecloud /> },
+        { name: "AWS", icon: <SiAmazonwebservices /> },
+        { name: "Cloudinary", icon: <SiCloudinary /> },
+        { name: "Supabase", icon: <SiSupabase /> },
+    ],
+};
 
 function Home() {
     return (
@@ -52,6 +72,7 @@ function Home() {
                     </div>
                 </section>
             </div>
+            <Education />
             <Experience />
             <ToolKit />
             <Projects />
@@ -75,6 +96,7 @@ function NavigationBar() {
     const navItems = [
         { label: "Home", href: "#home" },
         { label: "Experience", href: "#experience" },
+        { label: "Education", href: "#education" },
         { label: "Skills", href: "#toolkit" },
         { label: "Projects", href: "#projects" },
         { label: "Contact", href: "#contact" },
@@ -94,15 +116,32 @@ function NavigationBar() {
 }
 
 function ToolKit() {
+    const formatCategoryName = (name: string) => {
+        // Special case for devOps
+        if (name === 'devOps') return 'DevOps';
+        // Convert camelCase to space-separated words
+        return name
+            .replace(/([A-Z])/g, ' $1')
+            .replace(/^./, str => str.toUpperCase())
+            .trim();
+    };
+
     return (
         <div className='toolkit-container' id="toolkit">
             <h3>Tool Kit:</h3>
             <hr className='divider-line' />
             <div className='toolkit-cards-container'>
-                {toolkit.map((skill, index) => (
-                    <span key={index} className='skill-tag' title={skill.name}>
-                        {skill.icon}
-                    </span>
+                {Object.entries(toolkit).map(([category, skills]) => (
+                    <div key={category} className='toolkit-category'>
+                        <h4 className='toolkit-category-title'>{formatCategoryName(category)}</h4>
+                        <div className='toolkit-skills'>
+                            {skills.map((skill, index) => (
+                                <span key={index} className='skill-tag' title={skill.name}>
+                                    {skill.icon}
+                                </span>
+                            ))}
+                        </div>
+                    </div>
                 ))}
             </div>
         </div>
