@@ -4,6 +4,7 @@ import './home.css'
 import selfPortrait from './assets/self-portrait-Photoroom.png'
 import Experience from './components/experience'
 import Education from './components/education'
+import { projectsData } from './components/projectsData'
 import {
     SiHtml5, SiCss3, SiJavascript, SiTypescript, SiReact,
     SiLaravel, SiPython, SiCplusplus, SiNodedotjs,
@@ -149,38 +150,12 @@ function ToolKit() {
 }
 
 function Projects() {
-    const projects = [
-        {
-            title: "Property Listing Website (Node.js)",
-            description: "Property listing website (on Node.js) is a containerized resource for your favorites, allowing you to browse and detail your home website.",
-        },
-        {
-            title: "Service Management System (Laravel)",
-            description: "Service management system (Laravel) provides service management system, and services and rating automotive customer.",
-        },
-        {
-            title: "E-Commerce Website (HTML5 + Tailwind)",
-            description: "E-Commerce website (HTML5 + Tailwind) to bolster your customers on in-store, site website and commerce.",
-        },
-        {
-            title: "Game Portfolio (Three.js)",
-            description: "Game Portfolio (Three.js) is convert building, drawn pines or creation/code development, immersive, with bridges.",
-        },
-        {
-            title: "Terminal Chat Application (Java)",
-            description: "Terminal chat application (Java) is also gamist sow previous terminal management tool and chat application.",
-        },
-        {
-            title: "Sudoku Solver Application (Java)",
-            description: "Sudoku solver application (Java) is a real format and sudoku game integration in with your networks.",
-        }
-    ]
     return (
         <div className='projects-container' id="projects">
             <h2>Featured Projects:</h2>
             <hr className='divider-line' />
             <div className='projects-cards-grid'>
-                {projects.map((project, index) => (
+                {projectsData.map((project, index) => (
                     <div key={index} className='project-card'>
                         <h3>{project.title}</h3>
                         <p>{project.description}</p>
