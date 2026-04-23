@@ -240,6 +240,8 @@ function Projects() {
 function Footer() {
     const { t } = useTranslation();
     const [isFormVisible, setIsFormVisible] = useState(false);
+    const [name, setName] = useState('');
+    const [contact, setContact] = useState('');
     const [message, setMessage] = useState('');
     const [isSending, setIsSending] = useState(false);
     const [sendError, setSendError] = useState<string | null>(null);
@@ -276,7 +278,7 @@ function Footer() {
             const res = await fetch('/api/contact', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ message, website_confirm: honeypot }),
+                body: JSON.stringify({ name, contact, message, website_confirm: honeypot }),
             });
 
             const data = await res.json().catch(() => null);
@@ -286,6 +288,8 @@ function Footer() {
             }
 
             setSendSuccess(true);
+            setName('');
+            setContact('');
             setMessage('');
 
             setTimeout(() => {
@@ -346,12 +350,37 @@ function Footer() {
                         </span>
 
                         <form className='contact-form' onSubmit={handleSubmit}>
-                            <textarea
-                                value={message}
-                                onChange={(e) => setMessage(e.target.value)}
-                                placeholder={t('footer.placeholder')}
-                                required
-                            />
+                            <div className='form-row'>
+                                <div className='form-field'>
+                                    <label>{t('footer.nameLabel')}</label>
+                                    <input
+                                        type="text"
+                                        value={name}
+                                        onChange={(e) => setName(e.target.value)}
+                                        placeholder={t('footer.namePlaceholder')}
+                                        required
+                                    />
+                                </div>
+                                <div className='form-field'>
+                                    <label>{t('footer.contactLabel')}</label>
+                                    <input
+                                        type="text"
+                                        value={contact}
+                                        onChange={(e) => setContact(e.target.value)}
+                                        placeholder={t('footer.contactPlaceholder')}
+                                        required
+                                    />
+                                </div>
+                            </div>
+                            <div className='form-field'>
+                                <label>{t('footer.messageLabel')}</label>
+                                <textarea
+                                    value={message}
+                                    onChange={(e) => setMessage(e.target.value)}
+                                    placeholder={t('footer.placeholder')}
+                                    required
+                                />
+                            </div>
                             {/* Honeypot field */}
                             <input
                                 type="text"

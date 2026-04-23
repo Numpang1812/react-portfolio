@@ -95,10 +95,15 @@
     ]
   },
   "footer": {
-    "title": "私とつながる",
+    "title": "連絡先",
     "contact": "メッセージを送る",
     "closeForm": "フォームを閉じる",
     "viewCV": "履歴書を見る",
+    "nameLabel": "名前",
+    "contactLabel": "メール/Telegram",
+    "messageLabel": "メッセージ",
+    "namePlaceholder": "お名前",
+    "contactPlaceholder": "メールまたはTelegram",
     "placeholder": "何か書いてください...",
     "send": "送信",
     "sending": "送信中...",

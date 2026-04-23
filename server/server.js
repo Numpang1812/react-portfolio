@@ -38,7 +38,7 @@ app.get('/api/health', (_req, res) => {
 
 app.post('/api/contact', contactLimiter, async (req, res) => {
   console.log('Received message request:', req.body);
-  const { message, website_confirm } = req.body ?? {};
+  const { name, contact, message, website_confirm } = req.body ?? {};
 
   // Honeypot check: If a bot filled out the hidden field, we ignore the request silently
   if (website_confirm) {
@@ -46,14 +46,24 @@ app.post('/api/contact', contactLimiter, async (req, res) => {
     return res.json({ ok: true }); // We pretend it succeeded so the bot doesn't try again
   }
 
+  if (typeof name !== 'string' || name.trim().length === 0) {
+    return res.status(400).json({ ok: false, error: 'Name is required' });
+  }
+
+  if (typeof contact !== 'string' || contact.trim().length === 0) {
+    return res.status(400).json({ ok: false, error: 'Contact information is required' });
+  }
+
   if (typeof message !== 'string' || message.trim().length === 0) {
     return res.status(400).json({ ok: false, error: 'Message is required' });
   }
 
-  // Clean the message: strip all potential scripts and HTML tags
+  // Clean all inputs: strip all potential scripts and HTML tags
+  const cleanName = xss(name.trim());
+  const cleanContact = xss(contact.trim());
   const cleanMessage = xss(message.trim());
 
-  if (cleanMessage.length === 0) {
+  if (cleanName.length === 0 || cleanContact.length === 0 || cleanMessage.length === 0) {
     return res.status(400).json({ ok: false, error: 'Contains dangerous code (XSS detected)' });
   }
 
@@ -69,7 +79,7 @@ app.post('/api/contact', contactLimiter, async (req, res) => {
   }
 
   try {
-    const text = `New Message from Portfolio React: \n\n${cleanMessage}`;
+    const text = `New Message from *${cleanName}* :\n\n*${cleanMessage}*\n\nContact: *${cleanContact}*`;
 
     console.log('Sending to Telegram...');
     const telegramRes = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
@@ -78,6 +88,7 @@ app.post('/api/contact', contactLimiter, async (req, res) => {
       body: JSON.stringify({
         chat_id: chatId,
         text,
+        parse_mode: 'Markdown',
         disable_web_page_preview: true,
       }),
     });
