@@ -2,6 +2,18 @@
    HOME PAGE STYLES — Dark Navy Portfolio
    ══════════════════════════════════════════ */
 
+/* ── Khmer Font Support ── */
+html[lang="km"] body,
+html[lang="km"] {
+  font-family: 'Suwannaphum', serif;
+}
+
+/* ── Japanese Font Support ── */
+html[lang="ja"] body,
+html[lang="ja"] {
+  font-family: 'LINE Seed JP', sans-serif;
+}
+
 /* ── Layout Container ── */
 .home-container {
   max-width: 1200px;
@@ -33,6 +45,87 @@
   font-weight: 600;
   letter-spacing: -0.01em;
   color: var(--text-primary);
+}
+
+.header-titles {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.language-selector {
+  position: relative;
+}
+
+.language-button {
+  background: rgba(56, 119, 235, 0.1);
+  border: 1px solid rgba(56, 119, 235, 0.2);
+  color: var(--text-primary);
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 0.8rem;
+  transition: all 0.25s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.language-button:hover {
+  background: rgba(56, 119, 235, 0.2);
+  border-color: var(--accent-blue);
+}
+
+.language-arrow {
+  font-size: 0.6rem;
+  transition: transform 0.25s ease;
+}
+
+.language-flag {
+  width: 20px;
+  height: 14px;
+  object-fit: cover;
+  border-radius: 2px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.language-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  z-index: 1001;
+  min-width: 80px;
+  overflow: hidden;
+}
+
+.language-option {
+  width: 100%;
+  background: transparent;
+  border: none;
+  padding: 8px 12px;
+  color: var(--text-primary);
+  font-weight: 500;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.language-option:hover {
+  background: rgba(56, 119, 235, 0.1);
+}
+
+.language-option.active {
+  background: rgba(56, 119, 235, 0.2);
+  color: var(--accent-blue);
 }
 
 .subtitle {

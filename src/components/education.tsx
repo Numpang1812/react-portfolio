@@ -1,25 +1,19 @@
 import './education.css'
+import { useTranslation } from 'react-i18next'
 
 function Education() {
-    const education = [
-        {
-            institution: "Preah Sisowath High School",
-            degree: "High School Diploma",
-            period: "2020 - 2023",
-            description: "Completed high school with focus on STEM subjects such as mathematics, science, and technology"
-        },
-        {
-            institution: "American University of Phnom Penh",
-            degree: "Bachelor of Science in Software Development",
-            period: "2024 - Present",
-            description: "Currently pursuing a degree related with software development and architectural design"
-        },
-        
-    ];
+    const { t } = useTranslation();
+
+    const education = t('education.items', { returnObjects: true }) as Array<{
+        institution: string;
+        degree: string;
+        period: string;
+        description: string;
+    }>;
 
     return (
         <div className='education-container' id="education">
-            <h3>Education:</h3>
+            <h3>{t('education.title')}</h3>
             <div className='education-cards-container'>
                 {education.map((edu, index) => (
                     <div key={index} className='education-card'>

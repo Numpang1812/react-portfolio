@@ -1,16 +1,16 @@
 import React from 'react'
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import './home.css'
 import selfPortrait from './assets/self-portrait-Photoroom.png'
 import Experience from './components/experience'
 import Education from './components/education'
-import { projectsData } from './components/projectsData'
 import {
     SiHtml5, SiCss3, SiJavascript, SiTypescript, SiReact,
     SiLaravel, SiPython, SiCplusplus, SiNodedotjs,
     SiGithub, SiAmazonwebservices, SiMysql, SiMongodb, SiPhp,
     SiDart, SiFlutter, SiSvelte, SiSqlite, SiTurso,
-    SiGooglecloud, SiSupabase, SiVercel, SiC, SiCloudinary, SiGit
+    SiGooglecloud, SiSupabase, SiVercel, SiC, SiCloudinary, SiGit, SiSonarqube
 } from 'react-icons/si'
 import { FaJava } from 'react-icons/fa6'
 import CV from './assets/CV 2026.pdf'
@@ -45,6 +45,7 @@ const toolkit = {
         { name: "GitHub", icon: <SiGithub /> },
         { name: "Git", icon: <SiGit/> },
         { name: "Vercel", icon: <SiVercel /> },
+        { name: "SonarQube", icon: <SiSonarqube /> },
     ],
     cloudServices: [
         { name: "Google Cloud", icon: <SiGooglecloud /> },
@@ -55,6 +56,12 @@ const toolkit = {
 };
 
 function Home() {
+    const { t, i18n } = useTranslation();
+
+    useEffect(() => {
+        document.documentElement.lang = i18n.language;
+    }, [i18n.language]);
+
     return (
         <div className='home-container'>
             <div className='main-header'>
@@ -64,9 +71,9 @@ function Home() {
             <div className='main-body'>
                 <section className='introduction' id="home">
                     <div className='introduction-left'>
-                        <h1>Hi, I'm Piseth Tyvirakpoung</h1>
-                        <p>I'm a software developer and a Junior at the American University of Phnom Penh.</p>
-                        <p>I love building web applications, small web-based games, and other software programs.</p>
+                        <h1>{t('home.greeting')}</h1>
+                        <p>{t('home.intro1')}</p>
+                        <p>{t('home.intro2')}</p>
                     </div>
                     <div className='introduction-right'>
                         <img src={selfPortrait} alt="Piseth Tyvirakpoung" width={320} height={460} />
@@ -80,27 +87,69 @@ function Home() {
             <div className='main-footer'>
                 <Footer />
             </div>
-            <p className='copyright-text'>&copy; Tyvirakpoung Piseth 2026</p>
+            <p className='copyright-text'>{t('copyright')}</p>
         </div>
     )
 }
 
 function HomeHeader() {
+    const { i18n } = useTranslation();
+    const [isOpen, setIsOpen] = useState(false);
+
+    const languages = [
+        { code: 'en', label: 'EN', flag: '/english-flag.jpg' },
+        { code: 'ja', label: 'JP', flag: '/japan-flag.jpg' },
+        { code: 'km', label: 'KH', flag: '/cambodia-flag.jpg' },
+    ];
+
+    const currentLanguage = languages.find(lang => lang.code === i18n.language) || languages[0];
+
+    const handleLanguageChange = (code: string) => {
+        i18n.changeLanguage(code);
+        setIsOpen(false);
+    };
+
     return (
         <div className='header-titles'>
             <h3>Piseth Tyvirakpoung</h3>
+            <div className='language-selector'>
+                <button
+                    className='language-button'
+                    onClick={() => setIsOpen(!isOpen)}
+                >
+                    <img src={currentLanguage.flag} alt={currentLanguage.label} className='language-flag' />
+                    {currentLanguage.label}
+                    <span className='language-arrow'>{isOpen ? '▲' : '▼'}</span>
+                </button>
+                {isOpen && (
+                    <div className='language-dropdown'>
+                        {languages.map((lang) => (
+                            <button
+                                key={lang.code}
+                                className={`language-option ${lang.code === i18n.language ? 'active' : ''}`}
+                                onClick={() => handleLanguageChange(lang.code)}
+                            >
+                                <img src={lang.flag} alt={lang.label} className='language-flag' />
+                                {lang.label}
+                            </button>
+                        ))}
+                    </div>
+                )}
+            </div>
         </div>
     )
 }
 
 function NavigationBar() {
+    const { t } = useTranslation();
+
     const navItems = [
-        { label: "Home", href: "#home" },
-        { label: "Experience", href: "#experience" },
-        { label: "Education", href: "#education" },
-        { label: "Skills", href: "#toolkit" },
-        { label: "Projects", href: "#projects" },
-        { label: "Contact", href: "#contact" },
+        { label: t('nav.home'), href: "#home" },
+        { label: t('nav.experience'), href: "#experience" },
+        { label: t('nav.education'), href: "#education" },
+        { label: t('nav.skills'), href: "#toolkit" },
+        { label: t('nav.projects'), href: "#projects" },
+        { label: t('nav.contact'), href: "#contact" },
     ];
 
     return (
@@ -117,6 +166,8 @@ function NavigationBar() {
 }
 
 function ToolKit() {
+    const { t } = useTranslation();
+
     const formatCategoryName = (name: string) => {
         // Special case for devOps
         if (name === 'devOps') return 'DevOps';
@@ -127,14 +178,27 @@ function ToolKit() {
             .trim();
     };
 
+    const getCategoryTranslation = (name: string) => {
+        const key = name.toLowerCase();
+        // Try lowercase key first (for simple keys like 'languages', 'frameworks')
+        if (t(`toolkit.${key}`) !== `toolkit.${key}`) {
+            return t(`toolkit.${key}`);
+        }
+        // Try camelCase key (for keys like 'cloudServices', 'authenticationServices')
+        if (t(`toolkit.${name}`) !== `toolkit.${name}`) {
+            return t(`toolkit.${name}`);
+        }
+        return formatCategoryName(name);
+    };
+
     return (
         <div className='toolkit-container' id="toolkit">
-            <h3>Tool Kit:</h3>
+            <h3>{t('toolkit.title')}</h3>
             <hr className='divider-line' />
             <div className='toolkit-cards-container'>
                 {Object.entries(toolkit).map(([category, skills]) => (
                     <div key={category} className='toolkit-category'>
-                        <h4 className='toolkit-category-title'>{formatCategoryName(category)}</h4>
+                        <h4 className='toolkit-category-title'>{getCategoryTranslation(category)}</h4>
                         <div className='toolkit-skills'>
                             {skills.map((skill, index) => (
                                 <span key={index} className='skill-tag' title={skill.name}>
@@ -150,12 +214,19 @@ function ToolKit() {
 }
 
 function Projects() {
+    const { t } = useTranslation();
+
+    const projects = t('projects.items', { returnObjects: true }) as Array<{
+        title: string;
+        description: string;
+    }>;
+
     return (
         <div className='projects-container' id="projects">
-            <h2>Featured Projects:</h2>
+            <h2>{t('projects.title')}</h2>
             <hr className='divider-line' />
             <div className='projects-cards-grid'>
-                {projectsData.map((project, index) => (
+                {projects.map((project, index) => (
                     <div key={index} className='project-card'>
                         <h3>{project.title}</h3>
                         <p>{project.description}</p>
@@ -167,6 +238,7 @@ function Projects() {
 }
 
 function Footer() {
+    const { t } = useTranslation();
     const [isFormVisible, setIsFormVisible] = useState(false);
     const [message, setMessage] = useState('');
     const [isSending, setIsSending] = useState(false);
@@ -233,7 +305,7 @@ function Footer() {
 
     return (
         <div className='footer-content' id="contact">
-            <h2>Connect with me</h2>
+            <h2>{t('footer.title')}</h2>
             <p>Email: pang.jpsoen@gmail.com | Phone: +855 78 685 747</p>
 
             <div className='button-container'>
@@ -241,10 +313,10 @@ function Footer() {
                     className='contact-toggle'
                     onClick={() => setIsFormVisible(!isFormVisible)}
                 >
-                    {isFormVisible ? 'Close Form' : 'Send me a Message'}
+                    {isFormVisible ? t('footer.closeForm') : t('footer.contact')}
                 </button>
 
-                <button onClick={() => viewCV()} className='contact-toggle'>View my Curriculum Vitae</button>
+                <button onClick={() => viewCV()} className='contact-toggle'>{t('footer.viewCV')}</button>
             </div>
 
             {isFormVisible && (
@@ -277,7 +349,7 @@ function Footer() {
                             <textarea
                                 value={message}
                                 onChange={(e) => setMessage(e.target.value)}
-                                placeholder="Write something..."
+                                placeholder={t('footer.placeholder')}
                                 required
                             />
                             {/* Honeypot field */}
@@ -291,10 +363,10 @@ function Footer() {
                                 autoComplete="off"
                             />
                             <button type="submit" disabled={isSending}>
-                                {isSending ? 'Sending...' : 'Send'}
+                                {isSending ? t('footer.sending') : t('footer.send')}
                             </button>
-                            {sendError && <p className='contact-form-error'>{sendError}</p>}
-                            {sendSuccess && <p className='contact-form-success'>Sent!</p>}
+                            {sendError && <p className='contact-form-error'>{t('footer.error')}</p>}
+                            {sendSuccess && <p className='contact-form-success'>{t('footer.sent')}</p>}
                         </form>
                     </div>
                 </div>

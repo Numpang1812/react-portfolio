@@ -1,18 +1,23 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import './experience.css'
 
 interface ExperienceCardProps {
     company: string;
     title: string;
     description: string;
+    period: string;
 }
 
-const ExperienceCard = ({ company, title, description, isExpanded, onToggle, cardIndex }: ExperienceCardProps & { isExpanded: boolean; onToggle: () => void; cardIndex: number }) => {
+const ExperienceCard = ({ company, title, description, period, isExpanded, onToggle, cardIndex }: ExperienceCardProps & { isExpanded: boolean; onToggle: () => void; cardIndex: number }) => {
+    const { t } = useTranslation();
+
     return (
         <div className={`experience-card experience-card-${cardIndex}`}>
             <div className='experience-title'>
                 <h3>{company}</h3>
                 <small>{title}</small>
+                <span className='experience-period'>{period}</span>
             </div>
 
             {isExpanded && (
@@ -26,27 +31,22 @@ const ExperienceCard = ({ company, title, description, isExpanded, onToggle, car
                     onToggle();
                 }}
             >
-                {isExpanded ? "Hide Job Description ▲" : "Show Job Description ▼"}
+                {isExpanded ? t('experience.hideDescription') : t('experience.showDescription')}
             </button>
         </div>
     );
 };
 
 function Experience() {
+    const { t } = useTranslation();
     const [expandedCard, setExpandedCard] = useState<string | null>(null);
 
-    const experiences = [
-        {
-            company: "SBI Ly Hour Bank Plc.",
-            title: "Software Developer Intern",
-            description: "Managed two internal web application development projects for the bank. Worked on full-stack development with HTML, CSS, JavaScript, Node.js, MongoDB, and AWS S3."
-        },
-        {
-            company: "NextMake Inc.",
-            title: "Full-Stack Developer Trainee",
-            description: "Assisted senior developers in building web-based applications with Laravel. Worked on full-stack development with PHP, Blade, MySQL, Git, and Bootstrap."
-        }
-    ];
+    const experiences = t('experience.items', { returnObjects: true }) as Array<{
+        company: string;
+        title: string;
+        description: string;
+        period: string;
+    }>;
 
     const handleToggle = (company: string) => {
         console.log('Toggling:', company, 'Current expanded:', expandedCard);
@@ -55,7 +55,7 @@ function Experience() {
 
     return (
         <div className='experience-container'>
-            <h3>Work Experience:</h3>
+            <h3>{t('experience.title')}</h3>
             <div className='experience-cards-container'>
                 {experiences.map((exp, index) => (
                     <ExperienceCard

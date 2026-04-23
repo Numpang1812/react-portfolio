@@ -1,0 +1,109 @@
+{
+  "nav": {
+    "home": "ホーム",
+    "experience": "経験",
+    "education": "教育",
+    "skills": "スキル",
+    "projects": "プロジェクト",
+    "contact": "連絡先"
+  },
+  "home": {
+    "greeting": "こんにちは、ピセット・ティヴィラクポングです",
+    "intro1": "ソフトウェア開発者で、プノンペンのアメリカ大学の3年生です。",
+    "intro2": "ウェブアプリ、小さなウェブのゲーム、その他のソフトウェアプログラムを作ることが好きです。"
+  },
+  "experience": {
+    "title": "職務経歴:",
+    "showDescription": "職務説明を表示 ▼",
+    "hideDescription": "職務説明を非表示 ▲",
+    "items": [
+      {
+        "company": "SBI Ly Hour 銀行",
+        "title": "ソフトウェア開発インターン",
+        "period": "5月 2024 - 1月 2025",
+        "description": "銀行の内部Webアプリケーション開発プロジェクト2つを管理しました。HTML、CSS、JavaScript、Node.js、MongoDB、AWS S3を使用したフルスタック開発に従事しました。"
+      },
+      {
+        "company": "NextMake 株式会社",
+        "title": "フルスタック開発インターン",
+        "period": "9月 2025 - 1月 2026",
+        "description": "シニア開発者を支援してLaravelを使用したWebベースアプリケーションを構築しました。PHP、Blade、MySQL、Git、Bootstrapを使用したフルスタック開発に従事しました。"
+      }
+    ]
+  },
+  "education": {
+    "title": "学歴:",
+    "items": [
+      {
+        "institution": "プレア・シソワット高校",
+        "degree": "高等学校卒業証書",
+        "period": "2020 - 2023",
+        "description": "数学、科学、技術などのSTEM科目に重点を置いて高校を卒業しました"
+      },
+      {
+        "institution": "プノンペンのアメリカン大学",
+        "degree": "ソフトウェア開発学士号",
+        "period": "2024 - 現在",
+        "description": "現在、ソフトウェア開発とアーキテクチャデザインに関連する学位を取得中です"
+      }
+    ]
+  },
+  "toolkit": {
+    "title": "使える技術:",
+    "languages": "言語",
+    "frameworks": "フレームワーク",
+    "databases": "データベース",
+    "devOps": "DevOps",
+    "cloudServices": "クラウドサービス",
+    "authenticationServices": "認証サービス"
+  },
+  "projects": {
+    "title": "開発したプロジェクト:",
+    "items": [
+      {
+        "title": "Property Mart",
+        "description": "地元銀行の内部使用向けにNode.jsで構築された不動産リストeコマースウェブサイト"
+      },
+      {
+        "title": "Admin Management System",
+        "description": "NextMakeのためにLaravelでWebアプリケーションとして構築された葬儀管理システム"
+      },
+      {
+        "title": "Julvry",
+        "description": "大学プロジェクトのためにHTML5とTailwindで構築された宝石eコマースウェブサイト"
+      },
+      {
+        "title": "Game Portfolio",
+        "description": "Three.jsでRPGゲームとして構築された私の個人ポートフォリオウェブサイト"
+      },
+      {
+        "title": "SmartCharge KH",
+        "description": "Flutterで構築されたプノンペンの充電スタンドを検索するためのモバイルアプリケーション"
+      },
+      {
+        "title": "Sudoku Solver",
+        "description": "Javaで構築された数独ソルバーウェブアプリケーション"
+      },
+      {
+        "title": "Pigeon",
+        "description": "SvelteKitで構築されたTwitterのようなソーシャルメディアウェブアプリケーション"
+      },
+      {
+        "title": "Quiz Nihongo!",
+        "description": "SvelteKitで構築された日本語クイズゲームウェブアプリケーション"
+      }
+    ]
+  },
+  "footer": {
+    "title": "私とつながる",
+    "contact": "メッセージを送る",
+    "closeForm": "フォームを閉じる",
+    "viewCV": "履歴書を見る",
+    "placeholder": "何か書いてください...",
+    "send": "送信",
+    "sending": "送信中...",
+    "sent": "送信完了！",
+    "error": "メッセージの送信に失敗しました"
+  },
+  "copyright": "© Tyvirakpoung Piseth 2026"
+}
