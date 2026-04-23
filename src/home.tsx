@@ -100,7 +100,7 @@ function Home() {
 }
 
 function HomeHeader({ isMenuOpen, setIsMenuOpen }: { isMenuOpen: boolean, setIsMenuOpen: (v: boolean) => void }) {
-    const { i18n } = useTranslation();
+    const { t, i18n } = useTranslation();
     const [isLangOpen, setIsLangOpen] = useState(false);
 
     const languages = [
@@ -118,7 +118,7 @@ function HomeHeader({ isMenuOpen, setIsMenuOpen }: { isMenuOpen: boolean, setIsM
 
     return (
         <div className='header-titles'>
-            <h3>Piseth Tyvirakpoung</h3>
+            <h3>{t('nav.name')}</h3>
             <div className='language-selector'>
                 <button
                     className='language-button'

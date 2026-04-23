@@ -1,5 +1,6 @@
 {
   "nav": {
+    "name": "ピセット・ティヴィラクポング",
     "home": "ホーム",
     "experience": "経験",
     "education": "教育",
@@ -13,9 +14,9 @@
     "intro2": "ウェブアプリ、小さなウェブのゲーム、その他のソフトウェアプログラムを作ることが好きです。"
   },
   "experience": {
-    "title": "職務経歴:",
-    "showDescription": "職務説明を表示 ▼",
-    "hideDescription": "職務説明を非表示 ▲",
+    "title": "仕事経歴:",
+    "showDescription": "仕事内容を表示 ▼",
+    "hideDescription": "仕事内容を非表示 ▲",
     "items": [
       {
         "company": "SBI Ly Hour 銀行",
@@ -41,7 +42,7 @@
         "description": "数学、科学、技術などのSTEM科目に重点を置いて高校を卒業しました"
       },
       {
-        "institution": "プノンペンのアメリカン大学",
+        "institution": "プノンペンのアメリカ大学",
         "degree": "ソフトウェア開発学士号",
         "period": "2024 - 現在",
         "description": "現在、ソフトウェア開発とアーキテクチャデザインに関連する学位を取得中です"
