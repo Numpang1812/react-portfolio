@@ -57,17 +57,24 @@ const toolkit = {
 
 function Home() {
     const { t, i18n } = useTranslation();
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     useEffect(() => {
         document.documentElement.lang = i18n.language;
     }, [i18n.language]);
 
+    // Close menu when a link is clicked
+    const closeMenu = () => setIsMenuOpen(false);
+
     return (
         <div className='home-container'>
             <div className='main-header'>
-                <HomeHeader />
+                <HomeHeader isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
                 <NavigationBar />
             </div>
+            
+            <MobileNavDrawer isOpen={isMenuOpen} onClose={closeMenu} />
+
             <div className='main-body'>
                 <section className='introduction' id="home">
                     <div className='introduction-left'>
@@ -92,9 +99,9 @@ function Home() {
     )
 }
 
-function HomeHeader() {
+function HomeHeader({ isMenuOpen, setIsMenuOpen }: { isMenuOpen: boolean, setIsMenuOpen: (v: boolean) => void }) {
     const { i18n } = useTranslation();
-    const [isOpen, setIsOpen] = useState(false);
+    const [isLangOpen, setIsLangOpen] = useState(false);
 
     const languages = [
         { code: 'en', label: 'EN', flag: '/english-flag.jpg' },
@@ -106,7 +113,7 @@ function HomeHeader() {
 
     const handleLanguageChange = (code: string) => {
         i18n.changeLanguage(code);
-        setIsOpen(false);
+        setIsLangOpen(false);
     };
 
     return (
@@ -115,13 +122,13 @@ function HomeHeader() {
             <div className='language-selector'>
                 <button
                     className='language-button'
-                    onClick={() => setIsOpen(!isOpen)}
+                    onClick={() => setIsLangOpen(!isLangOpen)}
                 >
                     <img src={currentLanguage.flag} alt={currentLanguage.label} className='language-flag' />
                     {currentLanguage.label}
-                    <span className='language-arrow'>{isOpen ? '▲' : '▼'}</span>
+                    <span className='language-arrow'>{isLangOpen ? '▲' : '▼'}</span>
                 </button>
-                {isOpen && (
+                {isLangOpen && (
                     <div className='language-dropdown'>
                         {languages.map((lang) => (
                             <button
@@ -136,6 +143,16 @@ function HomeHeader() {
                     </div>
                 )}
             </div>
+            
+            <button 
+                className={`hamburger-btn ${isMenuOpen ? 'open' : ''}`} 
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                aria-label="Toggle menu"
+            >
+                <span className="hamburger-bar"></span>
+                <span className="hamburger-bar"></span>
+                <span className="hamburger-bar"></span>
+            </button>
         </div>
     )
 }
@@ -163,6 +180,34 @@ function NavigationBar() {
             </ul>
         </nav>
     )
+}
+
+function MobileNavDrawer({ isOpen, onClose }: { isOpen: boolean, onClose: () => void }) {
+    const { t } = useTranslation();
+
+    const navItems = [
+        { label: t('nav.home'), href: "#home" },
+        { label: t('nav.experience'), href: "#experience" },
+        { label: t('nav.education'), href: "#education" },
+        { label: t('nav.skills'), href: "#toolkit" },
+        { label: t('nav.projects'), href: "#projects" },
+        { label: t('nav.contact'), href: "#contact" },
+    ];
+
+    return (
+        <div className={`mobile-nav-drawer ${isOpen ? 'open' : ''}`}>
+            {navItems.map((item) => (
+                <a 
+                    key={item.label} 
+                    href={item.href} 
+                    className="mobile-nav-item"
+                    onClick={onClose}
+                >
+                    {item.label}
+                </a>
+            ))}
+        </div>
+    );
 }
 
 function ToolKit() {

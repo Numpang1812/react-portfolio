@@ -39,6 +39,13 @@ html[lang="ja"] {
   border-bottom: 1px solid rgba(56, 119, 235, 0.1);
 }
 
+.header-titles {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex: 1; /* Take up all available space */
+}
+
 .header-titles h3 {
   margin: 0;
   font-size: 1rem;
@@ -47,14 +54,190 @@ html[lang="ja"] {
   color: var(--text-primary);
 }
 
-.header-titles {
-  display: flex;
+.language-selector {
+  position: relative;
+  margin-right: auto; /* Push only the hamburger to the far right */
+}
+
+/* ── Hamburger Button (hidden on desktop) ── */
+.hamburger-btn {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
   align-items: center;
-  gap: 16px;
+  gap: 5px;
+  width: 36px;
+  height: 36px;
+  background: rgba(56, 119, 235, 0.1);
+  border: 1px solid rgba(56, 119, 235, 0.2);
+  border-radius: 8px;
+  cursor: pointer;
+  padding: 0;
+  transition: background 0.25s ease;
+  flex-shrink: 0;
+}
+
+.hamburger-btn:hover {
+  background: rgba(56, 119, 235, 0.2);
+}
+
+.hamburger-bar {
+  display: block;
+  width: 18px;
+  height: 2px;
+  background: var(--text-primary);
+  border-radius: 2px;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  transform-origin: center;
+}
+
+.hamburger-btn.open .hamburger-bar:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+.hamburger-btn.open .hamburger-bar:nth-child(2) {
+  opacity: 0;
+  transform: scaleX(0);
+}
+.hamburger-btn.open .hamburger-bar:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+/* ── Mobile Drawer Nav ── */
+.mobile-nav-drawer {
+  display: none;
+  position: fixed;
+  top: 64px;
+  left: 0;
+  right: 0;
+  background: rgba(10, 14, 39, 0.97);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(56, 119, 235, 0.15);
+  z-index: 999;
+  padding: 12px 16px 20px;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.mobile-nav-drawer.open {
+  display: flex;
+}
+
+.mobile-nav-item {
+  display: block;
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 8px;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-align: left;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  font-family: inherit;
+}
+
+.mobile-nav-item:hover,
+.mobile-nav-item.active {
+  color: var(--accent-blue);
+  background: rgba(56, 119, 235, 0.08);
+}
+
+/* ── Responsive Header ── */
+@media (max-width: 900px) {
+  .header-titles h3 {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .main-header {
+    padding: 0 20px;
+    height: 56px;
+  }
+
+  .header-titles h3 {
+    font-size: 0.875rem;
+  }
+
+  .header-titles {
+    gap: 12px;
+  }
+
+  .language-button {
+    padding: 5px 10px;
+    font-size: 0.75rem;
+  }
+
+  .language-flag {
+    width: 18px;
+    height: 12px;
+  }
+
+  /* Show hamburger, hide desktop nav */
+  .hamburger-btn {
+    display: flex;
+  }
+
+  .nav-bar {
+    display: none;
+  }
+
+  .mobile-nav-drawer {
+    top: 56px;
+  }
+}
+
+@media (max-width: 480px) {
+  .main-header {
+    padding: 0 12px;
+    height: 52px;
+  }
+
+  .header-titles h3 {
+    font-size: 0.82rem;
+  }
+
+  .language-button {
+    padding: 4px 8px;
+    font-size: 0.72rem;
+    gap: 5px;
+  }
+
+  .language-flag {
+    width: 16px;
+    height: 11px;
+  }
+
+  .mobile-nav-drawer {
+    top: 52px;
+  }
+}
+
+@media (max-width: 360px) {
+  .header-titles h3 {
+    font-size: 0.75rem;
+    max-width: 80px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .language-button {
+    padding: 3px 6px;
+    font-size: 0.65rem;
+  }
+
+  .language-flag {
+    display: none; /* Hide flags on very small screens to save space */
+  }
 }
 
 .language-selector {
   position: relative;
+  margin-right: auto;
 }
 
 .language-button {
@@ -155,6 +338,13 @@ html[lang="ja"] {
 .nav-item.active {
   color: var(--accent-blue);
   background: rgba(56, 119, 235, 0.08);
+}
+
+/* Ensure language and hamburger are side-by-side on mobile */
+@media (max-width: 768px) {
+  .header-titles {
+    gap: 8px; /* Slightly tighter gap on mobile */
+  }
 }
 
 /* ── Hero / Introduction Section ── */
