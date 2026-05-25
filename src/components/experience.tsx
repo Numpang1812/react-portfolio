@@ -39,7 +39,7 @@ const ExperienceCard = ({ company, title, description, period, isExpanded, onTog
 
 function Experience() {
     const { t } = useTranslation();
-    const [expandedCard, setExpandedCard] = useState<string | null>(null);
+    const [expandedCard, setExpandedCard] = useState<number | null>(null);
 
     const experiences = t('experience.items', { returnObjects: true }) as Array<{
         company: string;
@@ -48,9 +48,8 @@ function Experience() {
         period: string;
     }>;
 
-    const handleToggle = (company: string) => {
-        console.log('Toggling:', company, 'Current expanded:', expandedCard);
-        setExpandedCard(expandedCard === company ? null : company);
+    const handleToggle = (index: number) => {
+        setExpandedCard(expandedCard === index ? null : index);
     };
 
     return (
@@ -59,10 +58,10 @@ function Experience() {
             <div className='experience-cards-container'>
                 {experiences.map((exp, index) => (
                     <ExperienceCard
-                        key={exp.company}
+                        key={index}
                         {...exp}
-                        isExpanded={expandedCard === exp.company}
-                        onToggle={() => handleToggle(exp.company)}
+                        isExpanded={expandedCard === index}
+                        onToggle={() => handleToggle(index)}
                         cardIndex={index}
                     />
                 ))}

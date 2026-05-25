@@ -10,9 +10,10 @@ import {
     SiLaravel, SiPython, SiCplusplus, SiNodedotjs,
     SiGithub, SiAmazonwebservices, SiMysql, SiMongodb, SiPhp,
     SiDart, SiFlutter, SiSvelte, SiSqlite, SiTurso,
-    SiGooglecloud, SiSupabase, SiVercel, SiC, SiCloudinary, SiGit, SiSonarqube
+    SiGooglecloud, SiSupabase, SiVercel, SiC, SiCloudinary, SiGit, SiSonarqube, SiCentos,
+    SiKalilinux, SiDocker
 } from 'react-icons/si'
-import { FaJava } from 'react-icons/fa6'
+import { FaJava, FaWindows } from 'react-icons/fa6'
 import CV from './assets/CV 2026.pdf'
 
 const toolkit = {
@@ -52,6 +53,14 @@ const toolkit = {
         { name: "AWS", icon: <SiAmazonwebservices /> },
         { name: "Cloudinary", icon: <SiCloudinary /> },
         { name: "Supabase", icon: <SiSupabase /> },
+    ],
+    operatingSystems: [
+        { name: "Windows", icon: <FaWindows /> },
+        { name: "CentOS", icon: <SiCentos /> },
+        { name: "Kali Linux", icon: <SiKalilinux /> },
+    ],
+    containers: [
+        { name: "Docker", icon: <SiDocker /> },
     ],
 };
 
@@ -162,7 +171,6 @@ function NavigationBar() {
 
     const navItems = [
         { label: t('nav.home'), href: "#home" },
-        { label: t('nav.experience'), href: "#experience" },
         { label: t('nav.education'), href: "#education" },
         { label: t('nav.skills'), href: "#toolkit" },
         { label: t('nav.projects'), href: "#projects" },

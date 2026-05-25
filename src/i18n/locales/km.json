@@ -56,7 +56,9 @@
     "databases": "Database",
     "devOps": "DevOps",
     "cloudServices": "Cloud Service",
-    "authenticationServices": "Authentication Service"
+    "authenticationServices": "Authentication Service",
+    "operatingSystems": "Operating System",
+    "containers": "Container"
   },
   "projects": {
     "title": "គម្រោងដែលខ្ញុំបានធ្វើ:",

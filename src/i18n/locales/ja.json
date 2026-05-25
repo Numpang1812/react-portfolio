@@ -56,7 +56,9 @@
     "databases": "データベース",
     "devOps": "DevOps",
     "cloudServices": "クラウドサービス",
-    "authenticationServices": "認証サービス"
+    "authenticationServices": "認証サービス",
+    "operatingSystems": "オペレーティングシステム",
+    "containers": "コンテナ"
   },
   "projects": {
     "title": "開発したプロジェクト:",

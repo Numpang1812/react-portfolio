@@ -29,6 +29,12 @@
         "title": "Full-Stack Developer Trainee",
         "period": "September 2025 - January 2026",
         "description": "Assisted senior developers in building web-based applications with Laravel. Worked on full-stack development with PHP, Blade, MySQL, Git, and Bootstrap."
+      },
+      {
+        "company": "NextMake Inc.",
+        "title": "Software Developer Intern",
+        "period": "May 2026 - Present",
+        "description": "Undergoing three different web application projects as a leader of the development team. Working on full-stack development with Twig, PHP, MySQL, CloudFlare, and Authentication Services."
       }
     ]
   },
@@ -56,7 +62,9 @@
     "databases": "Databases",
     "devOps": "DevOps",
     "cloudServices": "Cloud Services",
-    "authenticationServices": "Authentication Services"
+    "authenticationServices": "Authentication Services",
+    "operatingSystems": "Operating Systems",
+    "containers": "Containers"
   },
   "projects": {
     "title": "Featured Projects:",
