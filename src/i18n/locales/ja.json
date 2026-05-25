@@ -29,6 +29,12 @@
         "title": "フルスタック開発インターン",
         "period": "9月 2025 - 1月 2026",
         "description": "シニア開発者を支援してLaravelを使用したWebベースアプリケーションを構築しました。PHP、Blade、MySQL、Git、Bootstrapを使用したフルスタック開発に従事しました。"
+      },
+      {
+        "company": "NextMake 株式会社",
+        "title": "ソフトウェア開発インターン",
+        "period": "5月 2026 - 現在",
+        "description": "開発チームのリーダーとして3つの異なるWebアプリケーションプロジェクトを進行中です。Twig、PHP、MySQL、CloudFlare、認証サービスを使用したフルスタック開発に従事しています。"
       }
     ]
   },

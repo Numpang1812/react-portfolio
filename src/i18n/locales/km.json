@@ -29,6 +29,12 @@
         "title": "អ្នកអភិវឌ្ឍកម្មវិធីសុសវែរ",
         "period": "កញ្ញា​ 2025 - មករា​ 2026",
         "description": "ជាអ្នកអភិវឌ្ឍ Full-Stack ក្នុងការបង្កើតកម្មវិធីបណ្តាញដោយប្រើ Laravel។ ធ្វើការអភិវឌ្ឍពេញលេញដោយប្រើ PHP, Blade, MySQL, Git និង Bootstrap។"
+      },
+      {
+        "company": "NextMake Inc.",
+        "title": "អ្នកអភិវឌ្ឍកម្មវិធីសូហ្វវែរ",
+        "period": "ឧសភា​ 2026 - បច្ចុប្បន្ន",
+        "description": "កំពុងដឹកនាំគម្រោងអភិវឌ្ឍកម្មវិធីលើWebផ្សេងៗគ្នាចំនួន៣។ ធ្វើការអភិវឌ្ឍ Full-Stack ដោយប្រើ Twig, PHP, MySQL, CloudFlare និង Authentication Services។"
       }
     ]
   },
