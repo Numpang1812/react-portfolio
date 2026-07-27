@@ -137,6 +137,16 @@ function HomeHeader({ isMenuOpen, setIsMenuOpen }: { isMenuOpen: boolean, setIsM
     return (
         <div className='header-titles'>
             <h3>{t('nav.name')}</h3>
+
+            <button
+                className="theme-toggle"
+                onClick={toggleTheme}
+                aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+                title={theme === 'dark' ? 'Autumn day mode' : 'Winter night mode'}
+            >
+                {theme === 'dark' ? <FaMoon /> : <span className="griddy-icons--sun" />}
+            </button>
+
             <div className='language-selector'>
                 <button
                     className='language-button'
@@ -161,15 +171,6 @@ function HomeHeader({ isMenuOpen, setIsMenuOpen }: { isMenuOpen: boolean, setIsM
                     </div>
                 )}
             </div>
-
-            <button
-                className="theme-toggle"
-                onClick={toggleTheme}
-                aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
-                title={theme === 'dark' ? 'Autumn day mode' : 'Winter night mode'}
-            >
-                {theme === 'dark' ? <span className="griddy-icons--sun" /> : <FaMoon />}
-            </button>
 
             <button 
                 className={`hamburger-btn ${isMenuOpen ? 'open' : ''}`} 
