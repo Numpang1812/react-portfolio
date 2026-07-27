@@ -16,7 +16,7 @@ import {
 } from 'react-icons/si'
 import { FaJava, FaWindows, FaMoon } from 'react-icons/fa6'
 import CV from './assets/CV 2026.pdf'
-import { useTheme } from './theme'
+import { useTheme } from './useTheme'
 import SeasonalParticles from './components/particles'
 
 const toolkit = {

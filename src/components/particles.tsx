@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { useTheme } from '../theme'
+import { useTheme } from '../useTheme'
 
 interface ParticleStyle {
   id: number
@@ -11,6 +11,11 @@ interface ParticleStyle {
   bgColor?: string
 }
 
+function pseudoRandom(seed: number): number {
+  const x = Math.sin(seed * 9999 + 1) * 10000
+  return x - Math.floor(x)
+}
+
 export default function SeasonalParticles() {
   const { theme } = useTheme()
 
@@ -19,23 +24,32 @@ export default function SeasonalParticles() {
     const count = isLight ? 20 : 60
     const leafColors = ['#D4573A', '#C17A2B', '#DAA520', '#B8860B', '#CD853F', '#8B4513']
 
-    return Array.from({ length: count }, (_, i) => ({
-      id: i,
-      left: `${Math.random() * 100}%`,
-      delay: `${Math.random() * 12}s`,
-      duration: `${isLight ? 8 + Math.random() * 14 : 5 + Math.random() * 10}s`,
-      size: isLight
-        ? `${8 + Math.random() * 16}px`
-        : `${2 + Math.random() * 8}px`,
-      opacity: isLight
-        ? `${0.3 + Math.random() * 0.45}`
-        : `${0.3 + Math.random() * 0.6}`,
-      ...(isLight
-        ? {
-            bgColor: leafColors[Math.floor(Math.random() * leafColors.length)],
-          }
-        : { bgColor: undefined }),
-    }))
+    return Array.from({ length: count }, (_, i) => {
+      const r1 = pseudoRandom(i * 7 + 1)
+      const r2 = pseudoRandom(i * 7 + 2)
+      const r3 = pseudoRandom(i * 7 + 3)
+      const r4 = pseudoRandom(i * 7 + 4)
+      const r5 = pseudoRandom(i * 7 + 5)
+      const r6 = pseudoRandom(i * 7 + 6)
+
+      return {
+        id: i,
+        left: `${r1 * 100}%`,
+        delay: `${r2 * 12}s`,
+        duration: `${isLight ? 8 + r3 * 14 : 5 + r3 * 10}s`,
+        size: isLight
+          ? `${8 + r4 * 16}px`
+          : `${2 + r4 * 8}px`,
+        opacity: isLight
+          ? `${0.3 + r5 * 0.45}`
+          : `${0.3 + r5 * 0.6}`,
+        ...(isLight
+          ? {
+              bgColor: leafColors[Math.floor(r6 * leafColors.length)],
+            }
+          : { bgColor: undefined }),
+      }
+    })
   }, [theme])
 
   return (
