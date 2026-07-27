@@ -1,5 +1,6 @@
 import React from 'react'
 import { useEffect, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { useTranslation } from 'react-i18next'
 import './home.css'
 import selfPortrait from './assets/self-portrait-Photoroom.png'
@@ -393,7 +394,7 @@ function Footer() {
                 <button onClick={() => viewCV()} className='contact-toggle'>{t('footer.viewCV')}</button>
             </div>
 
-            {isFormVisible && (
+            {isFormVisible && createPortal(
                 <div
                     className='contact-modal-backdrop'
                     role='presentation'
@@ -468,7 +469,8 @@ function Footer() {
                             {sendSuccess && <p className='contact-form-success'>{t('footer.sent')}</p>}
                         </form>
                     </div>
-                </div>
+                </div>,
+                document.body
             )}
         </div>
     )
