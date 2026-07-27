@@ -1,6 +1,5 @@
-/* ── Design Tokens ── */
+/* ── Design Tokens (Dark — Winter/Night) ── */
 :root {
-  /* Colors */
   --bg-primary: #0a0e27;
   --bg-secondary: #0d1333;
   --bg-card: rgba(13, 19, 51, 0.8);
@@ -12,8 +11,14 @@
   --text-muted: rgba(255, 255, 255, 0.5);
   --accent-blue: #3877eb;
   --accent-cyan: #38bdf8;
+  --accent-warm: #3877eb; /* same as blue in dark mode */
   --gradient-text: linear-gradient(135deg, #ffffff 0%, #94c4ff 100%);
   --gradient-hero: linear-gradient(180deg, #0a0e27 0%, #0d1333 50%, #0a0e27 100%);
+  --particle-color: #ffffff;
+  --particle-color-alt: rgba(200, 220, 255, 0.6);
+  --header-bg: rgba(10, 14, 39, 0.85);
+  --mobile-nav-bg: rgba(10, 14, 39, 0.97);
+  --modal-bg: #111640;
 
   /* Typography */
   font-family: 'DM Serif Text', 'Playfair Display', serif;
@@ -27,6 +32,37 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Light Mode (Autumn/Day) ── */
+.light {
+  --bg-primary: #FFF8F0;
+  --bg-secondary: #FFF0E0;
+  --bg-card: rgba(255, 240, 224, 0.85);
+  --bg-card-hover: rgba(255, 224, 200, 0.9);
+  --border-color: rgba(200, 120, 50, 0.2);
+  --border-glow: rgba(212, 119, 58, 0.35);
+  --text-primary: #3D2012;
+  --text-secondary: rgba(61, 32, 18, 0.7);
+  --text-muted: rgba(61, 32, 18, 0.45);
+  --accent-blue: #C97D3A;
+  --accent-cyan: #D4A055;
+  --accent-warm: #D4773A;
+  --gradient-text: linear-gradient(135deg, #3D2012 0%, #D4773A 100%);
+  --gradient-hero: linear-gradient(180deg, #FFF8F0 0%, #FFF0E0 50%, #FFF8F0 100%);
+  --particle-color: #D4573A;
+  --particle-color-alt: #DAA520;
+  --header-bg: rgba(255, 248, 240, 0.88);
+  --mobile-nav-bg: rgba(255, 248, 240, 0.97);
+  --modal-bg: #FFF5E6;
+}
+
+/* ── Smooth Theme Transitions ── */
+:root, .light {
+  transition: background-color 0.4s ease, color 0.4s ease;
+}
+* {
+  transition: background-color 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease, color 0.35s ease;
 }
 
 *, *::before, *::after {
@@ -88,4 +124,62 @@ button {
 
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(56, 119, 235, 0.5);
+}
+
+/* ══════════════════════════════════════════
+   SEASONAL PARTICLES (Leaves / Snow)
+   ══════════════════════════════════════════ */
+
+.seasonal-particles {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.particle {
+  position: absolute;
+  top: -20px;
+  will-change: transform;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  box-sizing: border-box;
+}
+
+/* Leaf shape (light mode) */
+.light .particle {
+  background: var(--particle-color);
+  border: 1.5px solid rgba(0, 0, 0, 0.15);
+  border-radius: 50% 0 50% 0;
+  animation-name: leafFall;
+  animation-timing-function: cubic-bezier(0.4, 0.2, 0.6, 1);
+}
+
+/* Snow shape (dark mode) */
+.particle {
+  background: var(--particle-color);
+  border-radius: 50%;
+  animation-name: snowFall;
+  animation-timing-function: ease-in-out;
+}
+
+@keyframes leafFall {
+  0%   { transform: translateY(-5vh) translateX(0) rotate(0deg) scale(1); opacity: 0; }
+  5%   { opacity: 1; }
+  25%  { transform: translateY(20vh) translateX(40px) rotate(120deg) scale(1.1); }
+  50%  { transform: translateY(50vh) translateX(-30px) rotate(240deg) scale(0.9); }
+  75%  { transform: translateY(75vh) translateX(35px) rotate(360deg) scale(1.05); }
+  95%  { opacity: 1; }
+  100% { transform: translateY(110vh) translateX(-20px) rotate(480deg) scale(0.6); opacity: 0; }
+}
+
+@keyframes snowFall {
+  0%   { transform: translateY(-5vh) translateX(0); opacity: 0; }
+  10%  { opacity: var(--particle-opacity, 0.6); }
+  25%  { transform: translateY(25vh) translateX(25px); }
+  50%  { transform: translateY(55vh) translateX(-18px); }
+  75%  { transform: translateY(82vh) translateX(20px); }
+  90%  { opacity: var(--particle-opacity, 0.6); }
+  100% { transform: translateY(110vh) translateX(-10px); opacity: 0; }
 }

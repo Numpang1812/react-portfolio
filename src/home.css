@@ -21,6 +21,11 @@ html[lang="ja"] {
   padding: 0 24px 40px;
 }
 
+.page-content {
+  position: relative;
+  z-index: 2;
+}
+
 /* ── Navigation Header ── */
 .main-header {
   position: fixed;
@@ -33,10 +38,10 @@ html[lang="ja"] {
   align-items: center;
   height: 64px;
   padding: 0 48px;
-  background: rgba(10, 14, 39, 0.85);
+  background: var(--header-bg);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(56, 119, 235, 0.1);
+  border-bottom: 1px solid var(--border-color);
 }
 
 .header-titles {
@@ -109,10 +114,10 @@ html[lang="ja"] {
   top: 64px;
   left: 0;
   right: 0;
-  background: rgba(10, 14, 39, 0.97);
+  background: var(--mobile-nav-bg);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(56, 119, 235, 0.15);
+  border-bottom: 1px solid var(--border-color);
   z-index: 999;
   padding: 12px 16px 20px;
   flex-direction: column;
@@ -235,11 +240,6 @@ html[lang="ja"] {
   }
 }
 
-.language-selector {
-  position: relative;
-  margin-right: auto;
-}
-
 .language-button {
   background: rgba(56, 119, 235, 0.1);
   border: 1px solid rgba(56, 119, 235, 0.2);
@@ -311,6 +311,166 @@ html[lang="ja"] {
   color: var(--accent-blue);
 }
 
+/* ── Theme Toggle ── */
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: rgba(56, 119, 235, 0.1);
+  border: 1px solid rgba(56, 119, 235, 0.2);
+  border-radius: 8px;
+  cursor: pointer;
+  padding: 0;
+  color: var(--text-primary);
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.theme-toggle:hover {
+  background: rgba(56, 119, 235, 0.2);
+  border-color: var(--accent-blue);
+  transform: scale(1.08);
+}
+
+.theme-toggle:active {
+  transform: scale(0.92);
+}
+
+.griddy-icons--sun {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  --svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='black' d='M12.75 1h-1.5v3h1.5zM23 11.25h-3v1.5h3zm-19 0H1v1.5h3zm15.246-7.557l-2.121 2.12l1.06 1.062l2.122-2.122zM4.75 3.685L3.69 4.746l2.12 2.121l1.062-1.06zm1.06 13.448l-2.12 2.12l1.06 1.061l2.122-2.12l-1.061-1.061ZM12 18.5A6.506 6.506 0 0 1 5.5 12c0-3.585 2.915-6.5 6.5-6.5s6.5 2.915 6.5 6.5s-2.915 6.5-6.5 6.5M12 7c-2.755 0-5 2.245-5 5s2.245 5 5 5s5-2.245 5-5s-2.245-5-5-5m.75 13h-1.5v3h1.5zm5.435-2.875l-1.06 1.061l2.12 2.122l1.061-1.061l-2.12-2.122Z'/%3E%3C/svg%3E");
+  background-color: currentColor;
+  -webkit-mask-image: var(--svg);
+  mask-image: var(--svg);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+}
+
+/* ── Light mode overrides for specific elements ── */
+.light .main-header {
+  border-bottom-color: rgba(200, 120, 50, 0.15);
+}
+
+.light .mobile-nav-drawer {
+  border-bottom-color: rgba(200, 120, 50, 0.12);
+}
+
+.light .mobile-nav-item:hover,
+.light .mobile-nav-item.active {
+  background: rgba(200, 120, 50, 0.1);
+}
+
+.light .hamburger-btn {
+  background: rgba(200, 120, 50, 0.1);
+  border-color: rgba(200, 120, 50, 0.2);
+}
+
+.light .hamburger-btn:hover {
+  background: rgba(200, 120, 50, 0.2);
+}
+
+.light .nav-item:hover,
+.light .nav-item.active {
+  background: rgba(200, 120, 50, 0.1);
+}
+
+.light .language-button {
+  background: rgba(200, 120, 50, 0.1);
+  border-color: rgba(200, 120, 50, 0.2);
+}
+
+.light .language-button:hover {
+  background: rgba(200, 120, 50, 0.2);
+  border-color: var(--accent-warm);
+}
+
+.light .language-option:hover {
+  background: rgba(200, 120, 50, 0.1);
+}
+
+.light .language-option.active {
+  background: rgba(200, 120, 50, 0.2);
+  color: var(--accent-warm);
+}
+
+.light .language-dropdown {
+  border-color: rgba(200, 120, 50, 0.2);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+.light .theme-toggle {
+  background: rgba(200, 120, 50, 0.1);
+  border-color: rgba(200, 120, 50, 0.2);
+}
+
+.light .theme-toggle:hover {
+  background: rgba(200, 120, 50, 0.2);
+  border-color: var(--accent-warm);
+}
+
+.light .skill-tag {
+  background: rgba(200, 120, 50, 0.06);
+  border-color: rgba(200, 120, 50, 0.12);
+}
+
+.light .skill-tag:hover {
+  background: rgba(200, 120, 50, 0.12);
+  border-color: var(--accent-warm);
+  box-shadow: 0 8px 24px rgba(200, 120, 50, 0.15);
+}
+
+.light .project-card {
+  background: rgba(200, 120, 50, 0.03);
+  border-color: rgba(200, 120, 50, 0.1);
+}
+
+.light .project-card:hover {
+  background: rgba(200, 120, 50, 0.06);
+  border-color: rgba(200, 120, 50, 0.25);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.06);
+}
+
+.light .contact-form input,
+.light .contact-form textarea {
+  background: rgba(200, 120, 50, 0.04);
+  border-color: rgba(200, 120, 50, 0.15);
+}
+
+.light .contact-form input:focus,
+.light .contact-form textarea:focus {
+  border-color: var(--accent-warm);
+  background: rgba(200, 120, 50, 0.08);
+  box-shadow: 0 0 0 3px rgba(200, 120, 50, 0.1);
+}
+
+.light .contact-toggle {
+  border-color: rgba(61, 32, 18, 0.25);
+}
+
+.light .contact-toggle:hover {
+  background: rgba(61, 32, 18, 0.06);
+  border-color: rgba(61, 32, 18, 0.4);
+}
+
+.light .contact-form button {
+  background: var(--accent-blue);
+}
+
+.light .introduction-right::before {
+  background: radial-gradient(ellipse at center, rgba(200, 120, 50, 0.12) 0%, transparent 70%);
+}
+
+.light .divider-line {
+  background: linear-gradient(to right, transparent, rgba(200, 120, 50, 0.2), transparent);
+}
+
 .subtitle {
   display: none;
 }
@@ -376,7 +536,7 @@ html[lang="ja"] {
   font-weight: 800;
   line-height: 1.12;
   margin-bottom: 24px;
-  background: linear-gradient(135deg, #ffffff 0%, #94c4ff 100%);
+  background: var(--gradient-text);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -628,7 +788,7 @@ html[lang="ja"] {
   width: min(650px, 95vw);
   max-height: 90vh;
   overflow-y: auto;
-  background: #111640;
+  background: var(--modal-bg);
   border: 1px solid var(--border-color);
   border-radius: 20px;
   box-shadow: 0 24px 80px rgba(0, 0, 0, 0.5);
@@ -850,7 +1010,7 @@ html[lang="ja"] {
     padding: 4px 10px;
   }
 
-  .introduction-left h2 {
+.introduction-left h1 {
     font-size: 2rem;
   }
 

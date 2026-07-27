@@ -102,6 +102,20 @@
   }
 }
 
+/* Light mode overrides */
+.light .experience-card:hover {
+  box-shadow: 0 8px 24px rgba(200, 120, 50, 0.08);
+}
+
+.light .show-description-btn {
+  border-color: rgba(200, 120, 50, 0.2);
+}
+
+.light .show-description-btn:hover {
+  background: rgba(200, 120, 50, 0.08);
+  border-color: var(--accent-warm);
+}
+
 /* Responsive */
 @media (max-width: 640px) {
   .experience-cards-container {

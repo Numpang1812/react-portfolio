@@ -13,8 +13,10 @@ import {
     SiGooglecloud, SiSupabase, SiVercel, SiC, SiCloudinary, SiGit, SiSonarqube, SiCentos,
     SiKalilinux, SiDocker
 } from 'react-icons/si'
-import { FaJava, FaWindows } from 'react-icons/fa6'
+import { FaJava, FaWindows, FaMoon } from 'react-icons/fa6'
 import CV from './assets/CV 2026.pdf'
+import { useTheme } from './theme'
+import SeasonalParticles from './components/particles'
 
 const toolkit = {
     languages: [
@@ -67,6 +69,7 @@ const toolkit = {
 function Home() {
     const { t, i18n } = useTranslation();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    useTheme(); // keeps html class in sync
 
     useEffect(() => {
         document.documentElement.lang = i18n.language;
@@ -84,32 +87,37 @@ function Home() {
             
             <MobileNavDrawer isOpen={isMenuOpen} onClose={closeMenu} />
 
-            <div className='main-body'>
-                <section className='introduction' id="home">
-                    <div className='introduction-left'>
-                        <h1>{t('home.greeting')}</h1>
-                        <p>{t('home.intro1')}</p>
-                        <p>{t('home.intro2')}</p>
-                    </div>
-                    <div className='introduction-right'>
-                        <img src={selfPortrait} alt="Piseth Tyvirakpoung" width={320} height={460} />
-                    </div>
-                </section>
+            <SeasonalParticles />
+
+            <div className='page-content'>
+                <div className='main-body'>
+                    <section className='introduction' id="home">
+                        <div className='introduction-left'>
+                            <h1>{t('home.greeting')}</h1>
+                            <p>{t('home.intro1')}</p>
+                            <p>{t('home.intro2')}</p>
+                        </div>
+                        <div className='introduction-right'>
+                            <img src={selfPortrait} alt="Piseth Tyvirakpoung" width={320} height={460} />
+                        </div>
+                    </section>
+                </div>
+                <Education />
+                <Experience />
+                <ToolKit />
+                <Projects />
+                <div className='main-footer'>
+                    <Footer />
+                </div>
+                <p className='copyright-text'>{t('copyright')}</p>
             </div>
-            <Education />
-            <Experience />
-            <ToolKit />
-            <Projects />
-            <div className='main-footer'>
-                <Footer />
-            </div>
-            <p className='copyright-text'>{t('copyright')}</p>
         </div>
     )
 }
 
 function HomeHeader({ isMenuOpen, setIsMenuOpen }: { isMenuOpen: boolean, setIsMenuOpen: (v: boolean) => void }) {
     const { t, i18n } = useTranslation();
+    const { theme, toggleTheme } = useTheme();
     const [isLangOpen, setIsLangOpen] = useState(false);
 
     const languages = [
@@ -152,7 +160,16 @@ function HomeHeader({ isMenuOpen, setIsMenuOpen }: { isMenuOpen: boolean, setIsM
                     </div>
                 )}
             </div>
-            
+
+            <button
+                className="theme-toggle"
+                onClick={toggleTheme}
+                aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+                title={theme === 'dark' ? 'Autumn day mode' : 'Winter night mode'}
+            >
+                {theme === 'dark' ? <span className="griddy-icons--sun" /> : <FaMoon />}
+            </button>
+
             <button 
                 className={`hamburger-btn ${isMenuOpen ? 'open' : ''}`} 
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
