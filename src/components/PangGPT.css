@@ -1,0 +1,652 @@
+/* ══════════════════════════════════════════════════════
+   PANGGPT — Floating Widget + Chat Window Styles
+   ══════════════════════════════════════════════════════ */
+
+/* ── Floating Widget ─────────────────────────────────── */
+.panggpt-widget {
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+  z-index: 9990;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+
+  /* Entrance animation */
+  animation: panggpt-bounce-in 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes panggpt-bounce-in {
+  0%   { opacity: 0; transform: scale(0.5) translateY(40px); }
+  100% { opacity: 1; transform: scale(1)   translateY(0); }
+}
+
+/* ── Pulsing rings ── */
+.panggpt-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 2px solid var(--accent-blue);
+  opacity: 0;
+  pointer-events: none;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -56%) scale(0.8);
+}
+
+.panggpt-ring--1 {
+  width: 120px;
+  height: 120px;
+  animation: panggpt-pulse 2.4s ease-out infinite 0s;
+}
+
+.panggpt-ring--2 {
+  width: 140px;
+  height: 140px;
+  animation: panggpt-pulse 2.4s ease-out infinite 0.6s;
+}
+
+@keyframes panggpt-pulse {
+  0%   { opacity: 0.6; transform: translate(-50%, -56%) scale(0.75); }
+  100% { opacity: 0;   transform: translate(-50%, -56%) scale(1.2); }
+}
+
+/* ── Avatar circle ── */
+.panggpt-widget-avatar {
+  position: relative;
+  width: 92px;
+  height: 92px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid var(--accent-blue);
+  box-shadow:
+    0 0 0 3px rgba(56, 119, 235, 0.25),
+    0 8px 32px rgba(56, 119, 235, 0.4),
+    0 4px 16px rgba(0, 0, 0, 0.4);
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+              box-shadow 0.35s ease;
+  background: var(--bg-card);
+  flex-shrink: 0;
+}
+
+.panggpt-widget-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  display: block;
+}
+
+.panggpt-widget:hover .panggpt-widget-avatar {
+  transform: scale(1.1) translateY(-4px);
+  box-shadow:
+    0 0 0 4px rgba(56, 119, 235, 0.4),
+    0 16px 40px rgba(56, 119, 235, 0.55),
+    0 8px 24px rgba(0, 0, 0, 0.5);
+}
+
+/* ── Online dot ── */
+.panggpt-online-dot {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 18px;
+  height: 18px;
+  background: #22c55e;
+  border-radius: 50%;
+  border: 3px solid var(--bg-primary);
+  transform: translate(30%, -30%);
+  animation: panggpt-dot-blink 2s ease-in-out infinite;
+}
+
+@keyframes panggpt-dot-blink {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.6); }
+  50%       { box-shadow: 0 0 0 6px rgba(34, 197, 94, 0); }
+}
+
+/* ── Title ── */
+.panggpt-widget-title {
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: var(--text-primary);
+  text-transform: none;
+  background: var(--gradient-text);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  line-height: 1;
+}
+
+/* ── Subtitle ── */
+.panggpt-widget-subtitle {
+  font-size: 0.58rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  background: rgba(56, 119, 235, 0.12);
+  border: 1px solid rgba(56, 119, 235, 0.2);
+  border-radius: 20px;
+  padding: 3px 10px;
+  transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+.panggpt-widget:hover .panggpt-widget-subtitle {
+  background: rgba(56, 119, 235, 0.2);
+  border-color: var(--accent-blue);
+}
+
+/* ── Light mode widget overrides ── */
+.light .panggpt-widget-avatar {
+  border-color: var(--accent-warm);
+  box-shadow:
+    0 0 0 3px rgba(200, 120, 50, 0.2),
+    0 8px 32px rgba(200, 120, 50, 0.3),
+    0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.light .panggpt-ring {
+  border-color: var(--accent-warm);
+}
+
+.light .panggpt-widget-subtitle {
+  background: rgba(200, 120, 50, 0.1);
+  border-color: rgba(200, 120, 50, 0.2);
+}
+
+.light .panggpt-widget:hover .panggpt-widget-subtitle {
+  background: rgba(200, 120, 50, 0.18);
+  border-color: var(--accent-warm);
+}
+
+/* ══════════════════════════════════════════════════════
+   CHAT WINDOW
+   ══════════════════════════════════════════════════════ */
+
+.panggpt-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  padding: 24px;
+  z-index: 10000;
+  animation: panggpt-fade-in 0.25s ease forwards;
+}
+
+@keyframes panggpt-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.panggpt-window {
+  width: min(520px, 95vw);
+  height: min(700px, 90vh);
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 24px;
+  box-shadow:
+    0 32px 80px rgba(0, 0, 0, 0.6),
+    0 0 0 1px rgba(56, 119, 235, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  overflow: hidden;
+  animation: panggpt-slide-up 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes panggpt-slide-up {
+  from { opacity: 0; transform: translateY(40px) scale(0.96); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ── Header ── */
+.panggpt-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 20px;
+  border-bottom: 1px solid var(--border-color);
+  background: rgba(56, 119, 235, 0.04);
+  flex-shrink: 0;
+}
+
+.panggpt-header-avatar {
+  position: relative;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid var(--accent-blue);
+  flex-shrink: 0;
+}
+
+.panggpt-header-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+}
+
+.panggpt-header-dot {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  width: 10px;
+  height: 10px;
+  background: #22c55e;
+  border-radius: 50%;
+  border: 2px solid var(--bg-card);
+}
+
+.panggpt-header-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.panggpt-header-name {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  background: var(--gradient-text);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  line-height: 1;
+}
+
+.panggpt-header-status {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  line-height: 1;
+}
+
+.panggpt-close-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  flex-shrink: 0;
+}
+
+.panggpt-close-btn:hover {
+  background: rgba(239, 68, 68, 0.15);
+  border-color: rgba(239, 68, 68, 0.4);
+  color: #ef4444;
+  transform: scale(1.1);
+}
+
+/* ── Messages ── */
+.panggpt-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  scroll-behavior: smooth;
+}
+
+.panggpt-messages::-webkit-scrollbar { width: 4px; }
+.panggpt-messages::-webkit-scrollbar-track { background: transparent; }
+.panggpt-messages::-webkit-scrollbar-thumb {
+  background: rgba(56, 119, 235, 0.25);
+  border-radius: 4px;
+}
+
+/* ── Intro card ── */
+.panggpt-intro {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.panggpt-intro-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid var(--accent-blue);
+  flex-shrink: 0;
+}
+
+.panggpt-intro-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+}
+
+.panggpt-intro-bubble {
+  background: rgba(56, 119, 235, 0.08);
+  border: 1px solid rgba(56, 119, 235, 0.18);
+  border-radius: 4px 16px 16px 16px;
+  padding: 14px 16px;
+  max-width: 90%;
+}
+
+.panggpt-intro-bubble p {
+  margin: 0;
+  font-size: 0.8rem;
+  line-height: 1.65;
+  color: var(--text-secondary);
+}
+
+.panggpt-intro-bubble strong {
+  color: var(--text-primary);
+}
+
+/* ── Suggestion chips ── */
+.panggpt-suggestions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.panggpt-suggestion-chip {
+  background: rgba(56, 119, 235, 0.08);
+  border: 1px solid rgba(56, 119, 235, 0.25);
+  border-radius: 20px;
+  padding: 6px 14px;
+  font-size: 0.68rem;
+  font-weight: 500;
+  color: var(--accent-blue);
+  cursor: pointer;
+  transition: all 0.25s ease;
+  font-family: inherit;
+}
+
+.panggpt-suggestion-chip:hover {
+  background: rgba(56, 119, 235, 0.18);
+  border-color: var(--accent-blue);
+  transform: translateY(-2px);
+}
+
+/* ── Message rows ── */
+.panggpt-msg {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  animation: panggpt-msg-in 0.3s ease forwards;
+}
+
+@keyframes panggpt-msg-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.panggpt-msg--user {
+  flex-direction: row-reverse;
+}
+
+.panggpt-msg-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 1.5px solid var(--border-color);
+  flex-shrink: 0;
+}
+
+.panggpt-msg-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+}
+
+.panggpt-msg-body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-width: 75%;
+}
+
+.panggpt-msg--user .panggpt-msg-body {
+  align-items: flex-end;
+}
+
+.panggpt-msg-bubble {
+  padding: 10px 14px;
+  border-radius: 18px;
+  font-size: 0.78rem;
+  line-height: 1.6;
+  word-break: break-word;
+}
+
+.panggpt-msg--assistant .panggpt-msg-bubble {
+  background: rgba(56, 119, 235, 0.09);
+  border: 1px solid rgba(56, 119, 235, 0.18);
+  border-bottom-left-radius: 4px;
+  color: var(--text-secondary);
+}
+
+.panggpt-msg--user .panggpt-msg-bubble {
+  background: linear-gradient(135deg, var(--accent-blue), #6366f1);
+  color: #ffffff;
+  border-bottom-right-radius: 4px;
+}
+
+.panggpt-msg-time {
+  font-size: 0.58rem;
+  color: var(--text-muted);
+  padding: 0 4px;
+}
+
+/* ── Typing dots ── */
+.panggpt-typing {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 14px 18px;
+}
+
+.panggpt-typing span {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent-blue);
+  display: block;
+  animation: panggpt-dot 1.2s ease-in-out infinite;
+}
+
+.panggpt-typing span:nth-child(2) { animation-delay: 0.2s; }
+.panggpt-typing span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes panggpt-dot {
+  0%, 80%, 100% { transform: scale(0.7); opacity: 0.4; }
+  40%           { transform: scale(1.1); opacity: 1; }
+}
+
+/* ── Input bar ── */
+.panggpt-input-bar {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  padding: 14px 16px;
+  border-top: 1px solid var(--border-color);
+  background: rgba(56, 119, 235, 0.03);
+  flex-shrink: 0;
+}
+
+.panggpt-input {
+  flex: 1;
+  background: rgba(56, 119, 235, 0.06);
+  border: 1px solid rgba(56, 119, 235, 0.2);
+  border-radius: 14px;
+  padding: 10px 14px;
+  color: var(--text-primary);
+  font-size: 0.78rem;
+  font-family: inherit;
+  line-height: 1.5;
+  resize: none;
+  max-height: 120px;
+  outline: none;
+  transition: border-color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+}
+
+.panggpt-input::placeholder {
+  color: var(--text-muted);
+}
+
+.panggpt-input:focus {
+  border-color: var(--accent-blue);
+  background: rgba(56, 119, 235, 0.1);
+  box-shadow: 0 0 0 3px rgba(56, 119, 235, 0.12);
+}
+
+.panggpt-input:disabled {
+  opacity: 0.6;
+}
+
+.panggpt-send-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: rgba(56, 119, 235, 0.2);
+  border: 1px solid rgba(56, 119, 235, 0.3);
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  flex-shrink: 0;
+}
+
+.panggpt-send-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+.panggpt-send-btn--active {
+  background: var(--accent-blue);
+  border-color: var(--accent-blue);
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(56, 119, 235, 0.4);
+}
+
+.panggpt-send-btn--active:hover {
+  transform: scale(1.08) translateY(-1px);
+  box-shadow: 0 6px 18px rgba(56, 119, 235, 0.55);
+}
+
+.panggpt-send-btn:disabled {
+  cursor: not-allowed;
+}
+
+/* ── Light mode overrides ── */
+.light .panggpt-window {
+  box-shadow:
+    0 32px 80px rgba(0, 0, 0, 0.2),
+    0 0 0 1px rgba(200, 120, 50, 0.1);
+}
+
+.light .panggpt-header {
+  background: rgba(200, 120, 50, 0.04);
+  border-color: rgba(200, 120, 50, 0.15);
+}
+
+.light .panggpt-header-avatar {
+  border-color: var(--accent-warm);
+}
+
+.light .panggpt-close-btn {
+  border-color: rgba(200, 120, 50, 0.2);
+}
+
+.light .panggpt-intro-bubble {
+  background: rgba(200, 120, 50, 0.06);
+  border-color: rgba(200, 120, 50, 0.15);
+}
+
+.light .panggpt-suggestion-chip {
+  background: rgba(200, 120, 50, 0.08);
+  border-color: rgba(200, 120, 50, 0.25);
+  color: var(--accent-warm);
+}
+
+.light .panggpt-suggestion-chip:hover {
+  background: rgba(200, 120, 50, 0.16);
+  border-color: var(--accent-warm);
+}
+
+.light .panggpt-msg--assistant .panggpt-msg-bubble {
+  background: rgba(200, 120, 50, 0.07);
+  border-color: rgba(200, 120, 50, 0.15);
+}
+
+.light .panggpt-msg--user .panggpt-msg-bubble {
+  background: linear-gradient(135deg, var(--accent-warm), #d97706);
+}
+
+.light .panggpt-typing span { background: var(--accent-warm); }
+
+.light .panggpt-input {
+  background: rgba(200, 120, 50, 0.05);
+  border-color: rgba(200, 120, 50, 0.2);
+}
+
+.light .panggpt-input:focus {
+  border-color: var(--accent-warm);
+  background: rgba(200, 120, 50, 0.09);
+  box-shadow: 0 0 0 3px rgba(200, 120, 50, 0.1);
+}
+
+.light .panggpt-input-bar {
+  border-color: rgba(200, 120, 50, 0.15);
+  background: rgba(200, 120, 50, 0.03);
+}
+
+.light .panggpt-send-btn--active {
+  background: var(--accent-warm);
+  border-color: var(--accent-warm);
+  box-shadow: 0 4px 12px rgba(200, 120, 50, 0.35);
+}
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+  .panggpt-widget {
+    bottom: 20px;
+    right: 20px;
+  }
+
+  .panggpt-widget-avatar {
+    width: 76px;
+    height: 76px;
+  }
+
+  .panggpt-backdrop {
+    padding: 0;
+    align-items: flex-end;
+    justify-content: center;
+  }
+
+  .panggpt-window {
+    width: 100vw;
+    height: 85vh;
+    border-radius: 24px 24px 0 0;
+    border-bottom: none;
+  }
+}

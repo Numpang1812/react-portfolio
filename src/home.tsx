@@ -18,6 +18,7 @@ import { FaJava, FaWindows, FaMoon } from 'react-icons/fa6'
 import CV from './assets/CV 2026.pdf'
 import { useTheme } from './useTheme'
 import SeasonalParticles from './components/particles'
+import PangGPT from './components/PangGPT'
 
 const toolkit = {
     languages: [
@@ -112,6 +113,7 @@ function Home() {
                 </div>
                 <p className='copyright-text'>{t('copyright')}</p>
             </div>
+            <PangGPT />
         </div>
     )
 }

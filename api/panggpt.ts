@@ -1,45 +1,16 @@
-import express from 'express';
-import dotenv from 'dotenv';
-import cors from 'cors';
-import path from 'path';
-import { fileURLToPath } from 'url';
-import { rateLimit } from 'express-rate-limit';
-import xss from 'xss';
+import type { IncomingMessage, ServerResponse } from 'node:http';
 
-// Help Node find the .env file in the root directory
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-dotenv.config({ path: path.join(__dirname, '../.env') });
+/* ── Vercel request/response shims ── */
+interface VercelRequest extends IncomingMessage {
+  body?: { message?: string };
+}
+interface VercelResponse extends ServerResponse {
+  status: (code: number) => VercelResponse;
+  json: (data: unknown) => VercelResponse;
+}
 
-const app = express();
-
-// More secure CORS: Only allow your own frontend
-app.use(cors({
-  origin: ['http://localhost:5173', 'http://127.0.0.1:5173'],
-  methods: ['GET', 'POST'],
-  allowedHeaders: ['Content-Type']
-}));
-
-// Set strict 18kb limit on payloads to prevent memory abuse
-app.use(express.json({ limit: '18kb' }));
-
-// Set up rate limiter: max 5 requests per day per IP
-const contactLimiter = rateLimit({
-  windowMs: 24 * 60 * 60 * 1000, // 24 hours
-  limit: 5, // Limit each IP to 5 requests per `window`
-  message: { ok: false, error: 'Too many messages sent from this IP, please try again after 24 hours' },
-  standardHeaders: 'draft-7', // draft-6: `RateLimit-*` headers; draft-7: combined `RateLimit` header
-  legacyHeaders: false, // Disable the `X-RateLimit-*` headers
-});
-
-app.get('/api/health', (_req, res) => {
-  res.json({ ok: true });
-});
-
-/* ═══════════════════════════════════════════
-   PANGGPT — AI Personality Chatbot
-   ═══════════════════════════════════════════ */
-const PANGGPT_SYSTEM_PROMPT = `You are PangGPT — an AI that embodies the personality, voice, and inner world of a Cambodian developer, dreamer, and someone who's been through a lot and come out softer, not harder.
+/* ── Pang's personality system prompt ── */
+const SYSTEM_PROMPT = `You are PangGPT — an AI that embodies the personality, voice, and inner world of a Cambodian developer, dreamer, and someone who's been through a lot and come out softer, not harder.
 
 ---
 
@@ -79,7 +50,7 @@ const PANGGPT_SYSTEM_PROMPT = `You are PangGPT — an AI that embodies the perso
 
 **Projects you built:**
 - **Property Mart:** Property listing e-commerce website built with Node.js for internal use by a local bank.
-- **Admin Management System:** A funeral management system built as a web application with Laravel for NextMake.
+- **Admin Management Systems:** A funeral management system built as a web application with Laravel and an insurance management system built with Twig for NextMake.
 - **Julvry:** A jewelry e-commerce website built with HTML5 and Tailwind for a university project.
 - **Game Portfolio:** Your personal portfolio website built as an RPG game with Three.js.
 - **SmartCharge KH:** A mobile application for locating charging stations in Phnom Penh built with Flutter.
@@ -117,6 +88,7 @@ const PANGGPT_SYSTEM_PROMPT = `You are PangGPT — an AI that embodies the perso
 - Do NOT use em dashes (—) — they sound robotic. Use commas, periods, or break into shorter sentences instead.
 - Do NOT write long paragraphs. Keep it tight. One to three short sentences or fragments max unless the user asks for more.
 - Do NOT overuse emojis. One per message max, and only when it actually fits the tone.
+- ALWAYS RESPOND IN EITHER ENGLISH OR JAPANESE
 
 ---
 
@@ -184,46 +156,15 @@ const PANGGPT_SYSTEM_PROMPT = `You are PangGPT — an AI that embodies the perso
 **Your goal:**
 You're here to be helpful, human-like, and kind — not a therapist, not a politician, not a chatbot that overshares. You make people feel heard, not analyzed. Short, warm, and real. 🖤`;
 
-const chatLimiter = rateLimit({
-  windowMs: 60 * 60 * 1000, // 1 hour
-  limit: 30,
-  message: { ok: false, error: 'Too many chat messages, please try again later.' },
-  standardHeaders: 'draft-7',
-  legacyHeaders: false,
-});
+export default async function handler(req: VercelRequest, res: VercelResponse) {
+  if (req.method !== 'POST') {
+    return res.status(405).json({ ok: false, error: 'Method not allowed' });
+  }
 
-const callOpenRouter = async (model, apiKey, userMessage) => {
-  const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${apiKey}`,
-      'Content-Type': 'application/json',
-      'HTTP-Referer': 'https://piseth.dev',
-      'X-Title': 'PangGPT Portfolio Chatbot',
-    },
-    body: JSON.stringify({
-      model,
-      messages: [
-        { role: 'system', content: PANGGPT_SYSTEM_PROMPT },
-        { role: 'user', content: userMessage },
-      ],
-      max_tokens: 300,
-      temperature: 0.82,
-    }),
-  });
-
-  if (!response.ok) return null;
-  const data = await response.json().catch(() => null);
-  return data?.choices?.[0]?.message?.content?.trim() ?? null;
-};
-
-app.post('/api/panggpt', chatLimiter, async (req, res) => {
   const userMessage = req.body?.message;
   if (!userMessage || typeof userMessage !== 'string' || !userMessage.trim()) {
     return res.status(400).json({ ok: false, error: 'Message is required' });
   }
-
-  const clean = xss(userMessage.trim()).slice(0, 1000);
 
   const apiKey = process.env.CHATBOT_MODEL_API;
   const modelPrimary = process.env.CHATBOT_MODEL_A ?? 'inclusionai/ling-3.0-flash:free';
@@ -233,95 +174,47 @@ app.post('/api/panggpt', chatLimiter, async (req, res) => {
     return res.status(500).json({ ok: false, error: 'AI service not configured' });
   }
 
-  try {
-    let reply = await callOpenRouter(modelPrimary, apiKey, clean);
-    if (!reply) reply = await callOpenRouter(modelFallback, apiKey, clean);
-    if (!reply) return res.status(502).json({ ok: false, error: 'AI service unavailable' });
-
-    return res.json({ ok: true, reply });
-  } catch (err) {
-    console.error('PangGPT error:', err);
-    return res.status(500).json({ ok: false, error: String(err) });
-  }
-});
-
-app.post('/api/contact', contactLimiter, async (req, res) => {
-  console.log('Received message request:', req.body);
-  const { name, contact, message, website_confirm } = req.body ?? {};
-
-  // Honeypot check: If a bot filled out the hidden field, we ignore the request silently
-  if (website_confirm) {
-    console.warn('Bot detected by honeypot! Ignoring...');
-    return res.json({ ok: true }); // We pretend it succeeded so the bot doesn't try again
-  }
-
-  if (typeof name !== 'string' || name.trim().length === 0) {
-    return res.status(400).json({ ok: false, error: 'Name is required' });
-  }
-
-  if (typeof contact !== 'string' || contact.trim().length === 0) {
-    return res.status(400).json({ ok: false, error: 'Contact information is required' });
-  }
-
-  if (typeof message !== 'string' || message.trim().length === 0) {
-    return res.status(400).json({ ok: false, error: 'Message is required' });
-  }
-
-  // Clean all inputs: strip all potential scripts and HTML tags
-  const cleanName = xss(name.trim());
-  const cleanContact = xss(contact.trim());
-  const cleanMessage = xss(message.trim());
-
-  if (cleanName.length === 0 || cleanContact.length === 0 || cleanMessage.length === 0) {
-    return res.status(400).json({ ok: false, error: 'Contains dangerous code (XSS detected)' });
-  }
-
-  const token = process.env.TELEGRAM_BOT_TOKEN;
-  const chatId = process.env.TELEGRAM_CHAT_ID;
-
-  if (!token || !chatId) {
-    console.error('Missing config:', { token: !!token, chatId: !!chatId });
-    return res.status(500).json({
-      ok: false,
-      error: 'Server is missing TELEGRAM_BOT_TOKEN or TELEGRAM_CHAT_ID',
-    });
-  }
-
-  try {
-    const text = `New Message from *${cleanName}* :\n\n*${cleanMessage}*\n\nContact: *${cleanContact}*`;
-
-    console.log('Sending to Telegram...');
-    const telegramRes = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        chat_id: chatId,
-        text,
-        parse_mode: 'Markdown',
-        disable_web_page_preview: true,
-      }),
-    });
-
-    const telegramJson = await telegramRes.json().catch(() => null);
-
-    if (!telegramRes.ok || !telegramJson?.ok) {
-      console.error('Telegram API Error:', telegramJson);
-      return res.status(502).json({
-        ok: false,
-        error: telegramJson?.description || 'Failed to send message to Telegram',
-        details: telegramJson,
+  const callModel = async (model: string): Promise<string | null> => {
+    try {
+      const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${apiKey}`,
+          'Content-Type': 'application/json',
+          'HTTP-Referer': 'https://piseth.dev',
+          'X-Title': 'PangGPT Portfolio Chatbot',
+        },
+        body: JSON.stringify({
+          model,
+          messages: [
+            { role: 'system', content: SYSTEM_PROMPT },
+            { role: 'user', content: userMessage.trim() },
+          ],
+          max_tokens: 300,
+          temperature: 0.82,
+        }),
       });
+
+      if (!response.ok) return null;
+
+      const data = await response.json().catch(() => null) as {
+        choices?: Array<{ message?: { content?: string } }>;
+      } | null;
+
+      return data?.choices?.[0]?.message?.content?.trim() ?? null;
+    } catch {
+      return null;
     }
+  };
 
-    console.log('Message sent successfully!');
-    return res.json({ ok: true });
-  } catch (err) {
-    console.error('Server catch error:', err);
-    return res.status(500).json({ ok: false, error: String(err) });
+  const reply = await callModel(modelPrimary) ?? await callModel(modelFallback);
+
+  if (!reply) {
+    return res.status(502).json({
+      ok: false,
+      error: 'Could not get a response from the AI service',
+    });
   }
-});
 
-const port = Number(process.env.PORT ?? 5174);
-app.listen(port, () => {
-  console.log(`API server listening on http://localhost:${port}`);
-});
+  return res.status(200).json({ ok: true, reply });
+}
