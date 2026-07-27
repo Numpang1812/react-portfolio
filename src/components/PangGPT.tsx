@@ -149,7 +149,7 @@ export default function PangGPT() {
           </div>
 
           {/* Title */}
-          <div className="panggpt-widget-title">PangGPT 1.0</div>
+          <div className="panggpt-widget-title">PangGPT 1.1</div>
 
           {/* Badge */}
           <span className="panggpt-online-dot" aria-hidden="true" />
@@ -176,7 +176,7 @@ export default function PangGPT() {
                 <span className="panggpt-header-dot" aria-hidden="true" />
               </div>
               <div className="panggpt-header-info">
-                <span className="panggpt-header-name">PangGPT 1.0</span>
+                <span className="panggpt-header-name">PangGPT 1.1</span>
                 <span className="panggpt-header-status">
                   {isLoading ? 'Thinking…' : 'Online'}
                 </span>
