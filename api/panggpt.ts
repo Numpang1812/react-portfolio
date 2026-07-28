@@ -173,20 +173,54 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(400).json({ ok: false, error: 'Message is required' });
   }
 
-  const apiKey = process.env.CHATBOT_MODEL_API;
+  const openRouterApiKey = process.env.CHATBOT_MODEL_API;
+  const geminiApiKey = process.env.GEMINI_CHATBOT_API || (openRouterApiKey?.startsWith('AIzaSy') ? openRouterApiKey : undefined);
+  const geminiModel = process.env.GEMINI_CHATBOT_MODEL || 'gemini-2.5-flash';
+
   const modelPrimary = process.env.CHATBOT_MODEL_A ?? 'inclusionai/ling-3.0-flash:free';
   const modelFallback = process.env.CHATBOT_MODEL_B ?? 'nvidia/nemotron-3-super-120b-a12b:free';
 
-  if (!apiKey) {
+  if (!openRouterApiKey && !geminiApiKey) {
     return res.status(500).json({ ok: false, error: 'AI service not configured' });
   }
 
-  const callModel = async (model: string): Promise<string | null> => {
+  const callGemini = async (key: string, model: string, prompt: string): Promise<string | null> => {
+    try {
+      const selectedModel = model || 'gemini-2.5-flash';
+      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${selectedModel}:generateContent?key=${key}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          systemInstruction: {
+            parts: [{ text: SYSTEM_PROMPT }]
+          },
+          contents: [{
+            role: 'user',
+            parts: [{ text: prompt.trim() }]
+          }],
+          generationConfig: {
+            maxOutputTokens: 300,
+            temperature: 0.82
+          }
+        })
+      });
+
+      if (!response.ok) return null;
+      const data = await response.json().catch(() => null) as {
+        candidates?: Array<{ content?: { parts?: Array<{ text?: string }> } }>;
+      } | null;
+      return data?.candidates?.[0]?.content?.parts?.[0]?.text?.trim() ?? null;
+    } catch {
+      return null;
+    }
+  };
+
+  const callModel = async (model: string, key: string, prompt: string): Promise<string | null> => {
     try {
       const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${apiKey}`,
+          'Authorization': `Bearer ${key}`,
           'Content-Type': 'application/json',
           'HTTP-Referer': 'https://piseth.dev',
           'X-Title': 'PangGPT Portfolio Chatbot',
@@ -195,7 +229,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           model,
           messages: [
             { role: 'system', content: SYSTEM_PROMPT },
-            { role: 'user', content: userMessage.trim() },
+            { role: 'user', content: prompt.trim() },
           ],
           max_tokens: 300,
           temperature: 0.82,
@@ -214,7 +248,18 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
   };
 
-  let reply = await callModel(modelPrimary) ?? await callModel(modelFallback);
+  let reply: string | null = null;
+
+  if (openRouterApiKey && !openRouterApiKey.startsWith('AIzaSy')) {
+    reply = await callModel(modelPrimary, openRouterApiKey, userMessage);
+    if (!reply) {
+      reply = await callModel(modelFallback, openRouterApiKey, userMessage);
+    }
+  }
+
+  if (!reply && geminiApiKey) {
+    reply = await callGemini(geminiApiKey, geminiModel, userMessage);
+  }
 
   if (!reply) {
     return res.status(502).json({

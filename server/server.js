@@ -217,6 +217,35 @@ const callOpenRouter = async (model, apiKey, userMessage) => {
   return data?.choices?.[0]?.message?.content?.trim() ?? null;
 };
 
+const callGemini = async (apiKey, model, userMessage) => {
+  try {
+    const selectedModel = model || 'gemini-2.5-flash';
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${selectedModel}:generateContent?key=${apiKey}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        systemInstruction: {
+          parts: [{ text: PANGGPT_SYSTEM_PROMPT }]
+        },
+        contents: [{
+          role: 'user',
+          parts: [{ text: userMessage }]
+        }],
+        generationConfig: {
+          maxOutputTokens: 300,
+          temperature: 0.82
+        }
+      })
+    });
+
+    if (!response.ok) return null;
+    const data = await response.json().catch(() => null);
+    return data?.candidates?.[0]?.content?.parts?.[0]?.text?.trim() ?? null;
+  } catch {
+    return null;
+  }
+};
+
 app.post('/api/panggpt', chatLimiter, async (req, res) => {
   const userMessage = req.body?.message;
   if (!userMessage || typeof userMessage !== 'string' || !userMessage.trim()) {
@@ -225,17 +254,29 @@ app.post('/api/panggpt', chatLimiter, async (req, res) => {
 
   const clean = xss(userMessage.trim()).slice(0, 1000);
 
-  const apiKey = process.env.CHATBOT_MODEL_API;
+  const openRouterApiKey = process.env.CHATBOT_MODEL_API;
+  const geminiApiKey = process.env.GEMINI_CHATBOT_API || (openRouterApiKey?.startsWith('AIzaSy') ? openRouterApiKey : undefined);
+  const geminiModel = process.env.GEMINI_CHATBOT_MODEL || 'gemini-2.5-flash';
+
   const modelPrimary = process.env.CHATBOT_MODEL_A ?? 'inclusionai/ling-3.0-flash:free';
   const modelFallback = process.env.CHATBOT_MODEL_B ?? 'nvidia/nemotron-3-super-120b-a12b:free';
 
-  if (!apiKey) {
+  if (!openRouterApiKey && !geminiApiKey) {
     return res.status(500).json({ ok: false, error: 'AI service not configured' });
   }
 
   try {
-    let reply = await callOpenRouter(modelPrimary, apiKey, clean);
-    if (!reply) reply = await callOpenRouter(modelFallback, apiKey, clean);
+    let reply = null;
+
+    if (openRouterApiKey && !openRouterApiKey.startsWith('AIzaSy')) {
+      reply = await callOpenRouter(modelPrimary, openRouterApiKey, clean);
+      if (!reply) reply = await callOpenRouter(modelFallback, openRouterApiKey, clean);
+    }
+
+    if (!reply && geminiApiKey) {
+      reply = await callGemini(geminiApiKey, geminiModel, clean);
+    }
+
     if (!reply) return res.status(502).json({ ok: false, error: 'AI service unavailable' });
 
     // Strip thinking blocks if model outputs them
